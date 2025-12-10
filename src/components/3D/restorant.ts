@@ -23,32 +23,36 @@ const initRestorant3D = (): { scene: THREE.Scene } => {
   };
 
   const camera = new THREE.PerspectiveCamera(
-    35,
+    80,
     size.width / size.height,
     0.1,
     200
   );
-  camera.position.set(0, 1, 6);
+  // camera.position.set(0, 1, 6);
   scene.add(camera);
 
   const cameraPositions = [
-    { pos: new THREE.Vector3(0, 1, 6), look: new THREE.Vector3(0, 0, 0) }, // Position 1
-    { pos: new THREE.Vector3(3, 2, 5), look: new THREE.Vector3(0, 0, 0) }, // Position 2
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 3  
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 4
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 5
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 6
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 7
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 8
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 9
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 10
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 11
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 12
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 13
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 14
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 15
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 16
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // Position 17
+    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // tester Position
+
+    { pos: new THREE.Vector3(-6.5, 3.5, -35.8), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 1
+    { pos: new THREE.Vector3(-3.3, 3.5, -34), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 2
+    { pos: new THREE.Vector3(-0.5, 3.5, -36), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 3  
+    { pos: new THREE.Vector3(3.5, 3.5, -34), look: new THREE.Vector3(-10, 0, 0) }, // TO4-Position 4
+
+    { pos: new THREE.Vector3(2, 1.5, -31), look: new THREE.Vector3(-10, 0, 0) }, // BOOTH-Position 1
+    { pos: new THREE.Vector3(-1, 1.5, -31), look: new THREE.Vector3(-10, 0, 0) }, // BOOTH-Position 2
+    { pos: new THREE.Vector3(-7.5, 1.5, -27), look: new THREE.Vector3(15, 0, 0) }, // BOOTH-Position 3
+    { pos: new THREE.Vector3(-8, 1.5, -23), look: new THREE.Vector3(150, 0, 0) }, // BOOTH-Position 4
+    { pos: new THREE.Vector3(-8, 1.5, -17), look: new THREE.Vector3(150, 0, 0) }, // BOOTH-Position 5
+    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // BOOTH-Position 6
+
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 1
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 2
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 3
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 4
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 5
+    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 6
+    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // STOOL-Position 7
   ];
 
   let currentIndex = 0;
@@ -77,6 +81,8 @@ const initRestorant3D = (): { scene: THREE.Scene } => {
     }
   });
 };
+
+  goToPosition(0);
 
 document.getElementById("prevCam")?.addEventListener("click", () => {
   currentIndex = (currentIndex - 1 + cameraPositions.length) % cameraPositions.length;

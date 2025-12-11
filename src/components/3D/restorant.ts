@@ -43,7 +43,7 @@ const initRestorant3D = (options: InitOptions = {}) => {
   // CAMERA POSITIONS
   const cameraPositions = [
     { pos: new THREE.Vector3(-6.5, 3.5, -35.8), rot: { x: 0, y: 185, z: 0 } }, // TO4-Position0 (landing - index 0)
-    
+
     { pos: new THREE.Vector3(-6.5, 3.5, -35.8), rot: { x: 0, y: 185, z: 0 } }, // TO4-Position1 (ndex 1)
     { pos: new THREE.Vector3(-3.3, 3.5, -34), rot: { x: 0, y: 180, z: 0 } }, // TO4-Position2 (index 2)
     { pos: new THREE.Vector3(-0.5, 3.5, -36), rot: { x: 0, y: 175, z: 0 } }, // TO4-Position3
@@ -90,7 +90,18 @@ const initRestorant3D = (options: InitOptions = {}) => {
   };
 
   // start at landing (index 0)
-  goToPosition(0);
+  camera.position.set(
+    cameraPositions[0].pos.x,
+    cameraPositions[0].pos.y,
+    cameraPositions[0].pos.z
+  );
+
+  camera.rotation.set(
+    THREE.MathUtils.degToRad(cameraPositions[0].rot.x),
+    THREE.MathUtils.degToRad(cameraPositions[0].rot.y),
+    THREE.MathUtils.degToRad(cameraPositions[0].rot.z)
+  );
+
 
   // helpers to move with bounds (no looping)
   const moveNext = () => {

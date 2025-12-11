@@ -27,8 +27,8 @@ export default function Home() {
         {!entered && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
             <img src="/logo.png" className="w-32 mb-6 opacity-90" alt="logo" />
-            <h1 className="text-3xl font-bold mb-3">Restorant</h1>
-            <p className="text-lg opacity-80">Welcome — scroll to enter</p>
+            <h1 className="text-3xl font-bold mb-3">RoseWood</h1>
+            <p className="text-lg opacity-80">Welcome — scroll to choose you seat</p>
           </div>
         )}
       </section>

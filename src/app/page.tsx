@@ -1,35 +1,36 @@
-// src/app/page.tsx
-
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import initRestorant3D from "@/components/3D/restorant";
 
 export default function Home() {
+  const [entered, setEntered] = useState(false);
+
   useEffect(() => {
-    initRestorant3D();
+    // pass onEnter and onExit so the 3D init can notify React to show/hide the landing overlay
+    initRestorant3D({
+      onEnter: () => setEntered(true),
+      onExit: () => setEntered(false),
+    });
   }, []);
 
   return (
     <div>
-      <section className="page relative w-full h-screen">
-        <canvas className="restorant-3D" />
+      <section className="fixed inset-0 w-screen h-screen overflow-hidden touch-none">
+        {/* Canvas with blur when not entered */}
+        <canvas
+          className={`restorant-3D w-full h-full transition-all duration-700
+            ${!entered ? "blur-xl brightness-50" : ""}
+          `}
+        />
 
-        {/* CAMERA SWITCH BUTTONS */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-4 z-50">
-          <button
-            id="prevCam"
-            className="px-5 py-3 text-2xl rounded-xl bg-white/70 backdrop-blur-md shadow-md hover:bg-white transition"
-          >
-            ←
-          </button>
-
-          <button
-            id="nextCam"
-            className="px-5 py-3 text-2xl rounded-xl bg-white/70 backdrop-blur-md shadow-md hover:bg-white transition"
-          >
-            →
-          </button>
-        </div>
+        {/* Landing UI */}
+        {!entered && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
+            <img src="/logo.png" className="w-32 mb-6 opacity-90" alt="logo" />
+            <h1 className="text-3xl font-bold mb-3">Restorant</h1>
+            <p className="text-lg opacity-80">Welcome — scroll to enter</p>
+          </div>
+        )}
       </section>
     </div>
   );

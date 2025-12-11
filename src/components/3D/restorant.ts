@@ -4,12 +4,9 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import gsap from "gsap";
 
-const initRestorant3D = (): { scene: THREE.Scene } => {
+const initRestorant3D = () => {
   const canvas = document.querySelector("canvas.restorant-3D") as HTMLCanvasElement;
-  if (!canvas) {
-    console.warn("Canvas .restorant-3D not found!");
-    return { scene: new THREE.Scene() };
-  }
+  if (!canvas) return;
 
   // Scene
   const scene = new THREE.Scene();
@@ -22,78 +19,73 @@ const initRestorant3D = (): { scene: THREE.Scene } => {
     pixelRatio: window.devicePixelRatio,
   };
 
-  const camera = new THREE.PerspectiveCamera(
-    80,
-    size.width / size.height,
-    0.1,
-    200
-  );
-  // camera.position.set(0, 1, 6);
+  const camera = new THREE.PerspectiveCamera(80, size.width / size.height, 0.1, 200);
   scene.add(camera);
 
+  // CAMERA POSITIONS
   const cameraPositions = [
-    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // tester Position
+    { pos: new THREE.Vector3(0.8, 1.5, -26.8), rot: { x: 0, y: 130, z: 0 } },
 
-    { pos: new THREE.Vector3(-6.5, 3.5, -35.8), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 1
-    { pos: new THREE.Vector3(-3.3, 3.5, -34), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 2
-    { pos: new THREE.Vector3(-0.5, 3.5, -36), look: new THREE.Vector3(0, 0, 0) }, // TO4-Position 3  
-    { pos: new THREE.Vector3(3.5, 3.5, -34), look: new THREE.Vector3(-10, 0, 0) }, // TO4-Position 4
+    { pos: new THREE.Vector3(-6.5, 3.5, -35.8), rot: { x: 0, y: 185, z: 0 } },
+    { pos: new THREE.Vector3(-3.3, 3.5, -34), rot: { x: 0, y: 180, z: 0 } },
+    { pos: new THREE.Vector3(-0.5, 3.5, -36), rot: { x: 0, y: 175, z: 0 } },
+    { pos: new THREE.Vector3(3.5, 3.5, -34), rot: { x: 0, y: 150, z: 0 } },
 
-    { pos: new THREE.Vector3(2, 1.5, -31), look: new THREE.Vector3(-10, 0, 0) }, // BOOTH-Position 1
-    { pos: new THREE.Vector3(-1, 1.5, -31), look: new THREE.Vector3(-10, 0, 0) }, // BOOTH-Position 2
-    { pos: new THREE.Vector3(-7.5, 1.5, -27), look: new THREE.Vector3(15, 0, 0) }, // BOOTH-Position 3
-    { pos: new THREE.Vector3(-8, 1.5, -23), look: new THREE.Vector3(150, 0, 0) }, // BOOTH-Position 4
-    { pos: new THREE.Vector3(-8, 1.5, -17), look: new THREE.Vector3(150, 0, 0) }, // BOOTH-Position 5
-    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // BOOTH-Position 6
+    { pos: new THREE.Vector3(2, 1.5, -31), rot: { x: 0, y: 165, z: 0 } },
+    { pos: new THREE.Vector3(-1, 1.5, -31), rot: { x: 0, y: 165, z: 0 } },
+    { pos: new THREE.Vector3(-7.5, 1.5, -26.8), rot: { x: 0, y: 240, z: 0 } },
+    { pos: new THREE.Vector3(-8, 1.5, -23), rot: { x: 0, y: 270, z: 0 } },
+    { pos: new THREE.Vector3(-8, 1.5, -17), rot: { x: 0, y: 270, z: 0 } },
+    { pos: new THREE.Vector3(-8, 1.5, -13), rot: { x: 0, y: 310, z: 0 } },
 
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 1
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 2
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 3
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 4
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 5
-    { pos: new THREE.Vector3(-3, 1.5, 4), look: new THREE.Vector3(0, 0, 0) }, // STOOL-Position 6
-    { pos: new THREE.Vector3(-8, 1.5, -14), look: new THREE.Vector3(500, 0, 0) }, // STOOL-Position 7
+    { pos: new THREE.Vector3(1.2, 1.5, -15), rot: { x: 0, y: 35, z: 0 } },
+    { pos: new THREE.Vector3(-1.2, 1.5, -15), rot: { x: 0, y: 10, z: 0 } },
+    { pos: new THREE.Vector3(-1.2, 1.5, -17), rot: { x: 0, y: 10, z: 0 } },
+    { pos: new THREE.Vector3(-1.2, 1.5, -19.2), rot: { x: 0, y: 10, z: 0 } },
+    { pos: new THREE.Vector3(-1.2, 1.5, -21), rot: { x: 0, y: 0, z: 0 } },
+    { pos: new THREE.Vector3(-1.2, 1.5, -25.5), rot: { x: 0, y: 170, z: 0 } },
+    { pos: new THREE.Vector3(0.8, 1.5, -26.8), rot: { x: 0, y: 130, z: 0 } },
   ];
 
   let currentIndex = 0;
 
   const goToPosition = (index: number) => {
-  const target = cameraPositions[index];
+    const target = cameraPositions[index];
 
-  gsap.to(camera.position, {
-    x: target.pos.x,
-    y: target.pos.y,
-    z: target.pos.z,
-    duration: 1.5,
-    ease: "power2.inOut",
-  });
+    gsap.to(camera.position, {
+      x: target.pos.x,
+      y: target.pos.y,
+      z: target.pos.z,
+      duration: 1.5,
+      ease: "power2.inOut",
+    });
 
-  const lookAtTarget = camera.getWorldDirection(new THREE.Vector3()).add(camera.position);
-
-  gsap.to(lookAtTarget, {
-    x: target.look.x,
-    y: target.look.y,
-    z: target.look.z,
-    duration: 1.5,
-    ease: "power2.inOut",
-    onUpdate: () => {
-      camera.lookAt(lookAtTarget);
-    }
-  });
-};
+    gsap.to(camera.rotation, {
+      x: THREE.MathUtils.degToRad(target.rot.x),
+      y: THREE.MathUtils.degToRad(target.rot.y),
+      z: THREE.MathUtils.degToRad(target.rot.z),
+      duration: 1.5,
+      ease: "power2.inOut",
+    });
+  };
 
   goToPosition(0);
 
-document.getElementById("prevCam")?.addEventListener("click", () => {
-  currentIndex = (currentIndex - 1 + cameraPositions.length) % cameraPositions.length;
-  goToPosition(currentIndex);
-});
+  // BUTTON EVENTS
+  document.getElementById("prevCam")?.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + cameraPositions.length) % cameraPositions.length;
+    goToPosition(currentIndex);
+  });
 
-document.getElementById("nextCam")?.addEventListener("click", () => {
-  currentIndex = (currentIndex + 1) % cameraPositions.length;
-  goToPosition(currentIndex);
-});
+  document.getElementById("nextCam")?.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % cameraPositions.length;
+    goToPosition(currentIndex);
+  });
 
+  // RENDERER
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(size.width, size.height);
+  renderer.setPixelRatio(size.pixelRatio);
 
   window.addEventListener("resize", () => {
     size.width = window.innerWidth;
@@ -103,51 +95,59 @@ document.getElementById("nextCam")?.addEventListener("click", () => {
     camera.updateProjectionMatrix();
 
     renderer.setSize(size.width, size.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   });
 
-  // Renderer
-  const renderer = new THREE.WebGLRenderer({
-    canvas,
-    antialias: true,
-  });
-  renderer.setSize(size.width, size.height);
-  renderer.setPixelRatio(size.pixelRatio);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  // Lighting
-  const light = new THREE.DirectionalLight(0xffffff, 2);
-  light.position.set(5, 5, 5);
-  scene.add(light);
-
+  // LIGHTING
+  scene.add(new THREE.DirectionalLight(0xffffff, 2));
   scene.add(new THREE.AmbientLight(0xffffff, 1));
 
-  // Load model
+  // LOAD MAIN RESTAURANT MODEL
   const loader = new GLTFLoader();
+  loader.load("/restorant3D.gltf", (gltf) => scene.add(gltf.scene));
 
-  loader.load(
-    "/restorant3D.gltf",
-    (gltf) => {
-      const model = gltf.scene;
-      model.position.set(0, 0, 0);
-      model.scale.set(1, 1, 1);
+  const reservedPositions = [
+    { x: -6.25, y: 1.94, z: -34.1, rot: { x: 0, y: 0, z: 0 } },
+    { x: -3.2, y: 1.94, z: -32.3, rot: { x: 0, y: 0, z: 0 } },
+    { x: -0.5, y: 1.94, z: -33.9, rot: { x: 0, y: 0, z: 0 } },
+    { x: 2.67, y: 1.94, z: -32.4, rot: { x: 0, y: -30, z: 0 } },
 
-      scene.add(model);
+    { x: 1.1, y: -0.07, z: -29, rot: { x: 0, y: -30, z: 0 } },
+    { x: -1.7, y: -0.07, z: -29, rot: { x: 0, y: -20, z: 0 } },
+    { x: -6.1, y: -0.07, z: -25.5, rot: { x: 0, y: 45, z: 0 } },
+    { x: -5.8, y: -0.07, z: -22.36, rot: { x: 0, y: 75, z: 0 } },
+    { x: -5.8, y: -0.07, z: -22.36, rot: { x: 0, y: 75, z: 0 } },
+    { x: -5.8, y: -0.07, z: -13.7, rot: { x: 0, y: 90, z: 0 } },
+    
+    { x: 0.7, y: 0, z: -15.5, rot: { x: 0, y: 20, z: 0 } },
+    { x: -1, y: 0, z: -16.2, rot: { x: 0, y: -20, z: 0 } },
+    { x: -1, y: 0, z: -18, rot: { x: 0, y: -20, z: 0 } },
+    { x: -1, y: 0, z: -20.2, rot: { x: 0, y: -20, z: 0 } },
+    { x: -0.8, y: 0, z: -22, rot: { x: 0, y: -20, z: 0 } },
+    { x: -0.6, y: 0, z: -23.5, rot: { x: 0, y: 20, z: 0 } },
+    { x: -0.2, y: 0, z: -24.7, rot: { x: 0, y: -20, z: 0 } },
+  ];
 
-      console.log("GLTF model loaded!");
-    },
-    undefined,
-    (error) => {
-      console.error("Error loading GLTF:", error);
-    }
-  );
+  loader.load("/reserved.glb", (gltf) => {
+    reservedPositions.forEach((p) => {
+      const clone = gltf.scene.clone(true);
+      clone.position.set(p.x, p.y, p.z);
 
-  // Animation loop
-  gsap.ticker.add(() => {
-    renderer.render(scene, camera);
+      clone.rotation.set(
+        THREE.MathUtils.degToRad(p.rot.x),
+        THREE.MathUtils.degToRad(p.rot.y),
+        THREE.MathUtils.degToRad(p.rot.z)
+      );
+
+      clone.scale.set(1, 1, 1);
+
+      scene.add(clone);
+    });
   });
 
-  return { scene };
+  // LOOP
+  gsap.ticker.add(() => renderer.render(scene, camera));
+
+  return {};
 };
 
 export default initRestorant3D;

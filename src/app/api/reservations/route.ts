@@ -17,23 +17,25 @@ export async function GET(req: Request) {
     );
   }
 
-  /**
-   * Overlapping logic:
-   * reservation.time_from < selected_to
-   * AND reservation.time_to > selected_from
-   */
   const { data, error } = await supabase
     .from("reservations")
     .select("seat_id")
     .eq("date", date)
     .eq("is_active", true)
-    .or(`and(time_from.lt.${to},time_to.gt.${from})`);
+    .lt("time_from", to)
+    .gt("time_to", from);
 
   if (error) {
+    console.error("Supabase error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // ✅ CRITICAL FIX: Convert seat_id from string to number
+  const reservedSeatIds = data.map((r) => Number(r.seat_id));
+
+  console.log("Found reserved seats (as numbers):", reservedSeatIds);
+
   return NextResponse.json({
-    reservedSeats: data.map((r) => r.seat_id),
+    reservedSeats: reservedSeatIds, // Now an array of numbers [1]
   });
 }

@@ -1,3 +1,5 @@
+// src/components/FloatingPanel.tsx
+
 'use client';
 
 import { useState } from "react";
@@ -36,6 +38,7 @@ export default function FloatingPanel() {
           <label className="text-white/60 text-xs uppercase tracking-widest">Date</label>
           <input
             type="date"
+            id="reservation-date" // ADDED ID
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="appearance-none bg-white/5 text-white rounded-xl px-4 py-2.5 text-sm outline-none border border-white/15 backdrop-blur focus:border-white/40 focus:bg-white/10 transition"
@@ -49,6 +52,7 @@ export default function FloatingPanel() {
             <label className="text-white/60 text-xs uppercase tracking-widest">From</label>
             <div className="flex items-center gap-2 rounded-xl bg-white/5 p-2 backdrop-blur border border-white/15">
               <select
+                id="time-from-hour" // ADDED ID
                 value={fromTime.split(":")[0] || "00"}
                 onChange={(e) =>
                   setFromTime(`${e.target.value}:${fromTime.split(":")[1] || "00"}`)
@@ -61,6 +65,7 @@ export default function FloatingPanel() {
               </select>
               <span className="text-white">:</span>
               <select
+                id="time-from-minute" // ADDED ID
                 value={fromTime.split(":")[1] || "00"}
                 onChange={(e) =>
                   setFromTime(`${fromTime.split(":")[0] || "00"}:${e.target.value}`)
@@ -79,6 +84,7 @@ export default function FloatingPanel() {
             <label className="text-white/60 text-xs uppercase tracking-widest">To</label>
             <div className="flex items-center gap-2 rounded-xl bg-white/5 p-2 backdrop-blur border border-white/15">
               <select
+                id="time-to-hour" // ADDED ID
                 value={toTime.split(":")[0] || "00"}
                 onChange={(e) =>
                   setToTime(`${e.target.value}:${toTime.split(":")[1] || "00"}`)
@@ -91,6 +97,7 @@ export default function FloatingPanel() {
               </select>
               <span className="text-white">:</span>
               <select
+                id="time-to-minute" // ADDED ID
                 value={toTime.split(":")[1] || "00"}
                 onChange={(e) =>
                   setToTime(`${toTime.split(":")[0] || "00"}:${e.target.value}`)

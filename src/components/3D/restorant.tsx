@@ -2,13 +2,27 @@
 
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js"; // For compressed models
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import gsap from "gsap";
 
 type InitOptions = {
   onEnter?: () => void;
   onExit?: () => void;
 };
+
+interface CustomEventDetail {
+  bellId?: number;
+  seatId?: number;
+  position?: {
+    x: number;
+    y: number;
+    z: number;
+  };
+}
+
+interface UpdateReservationsEvent extends Event {
+  detail: number[];
+}
 
 const initRestorant3D = (options: InitOptions = {}) => {
   const { onEnter, onExit } = options;
@@ -33,8 +47,7 @@ const initRestorant3D = (options: InitOptions = {}) => {
   renderer.setSize(size.width, size.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   
-  // Updated for newer Three.js versions
-  renderer.outputColorSpace = THREE.SRGBColorSpace; // Changed from sRGBEncoding
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
   window.addEventListener("resize", () => {
@@ -45,13 +58,11 @@ const initRestorant3D = (options: InitOptions = {}) => {
     renderer.setSize(size.width, size.height);
   });
 
-  // Better lighting setup
-  scene.add(new THREE.AmbientLight(0xffffff, 1.5)); // Increased ambient light
-  const dir = new THREE.DirectionalLight(0xffffff, 3); // Increased directional light
-  dir.position.set(10, 20, 10); // Better position
+  scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+  const dir = new THREE.DirectionalLight(0xffffff, 3);
+  dir.position.set(10, 20, 10);
   scene.add(dir);
 
-  // Add a second light for better visibility
   const fillLight = new THREE.DirectionalLight(0xffffff, 1);
   fillLight.position.set(-10, 10, -10);
   scene.add(fillLight);
@@ -90,14 +101,12 @@ const initRestorant3D = (options: InitOptions = {}) => {
 
   const loader = new GLTFLoader();
   
-  // Optional: Add Draco loader for compressed models
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
   loader.setDRACOLoader(dracoLoader);
 
   loader.load("/restorant3D.gltf", (gltf) => {
     scene.add(gltf.scene);
-    console.log("Restaurant model loaded");
   });
 
   const reservedPositions = [
@@ -132,28 +141,13 @@ const initRestorant3D = (options: InitOptions = {}) => {
         THREE.MathUtils.degToRad(p.rot.z)
       );
       seat.visible = false;
+      seat.userData = seat.userData || {};
       seat.userData.seatId = index;
       reservedMeshes.push(seat);
       scene.add(seat);
     });
-
-    window.addEventListener("update-reservations", (e: any) => {
-      console.log("Received update-reservations event:", e.detail);
-      const ids: number[] = e.detail;
-      console.log("Setting visibility for seat IDs:", ids);
-      reservedMeshes.forEach((m) => {
-        m.visible = ids.includes(m.userData.seatId);
-        console.log(`Seat ${m.userData.seatId}: ${m.visible ? 'visible' : 'hidden'}`);
-      });
-    });
-
-    (window as any).showReservedSeat = (seatId: number) => {
-      reservedMeshes.forEach((m) => (m.visible = m.userData.seatId === seatId));
-    };
   });
 
-  // =============== TABLE BELLS - VISIBLE WITH TEXTURES ===============
-  // Define bell positions - Y values adjusted to be on tables
   const tableBellPositions = [
     { x: -6.25, y: 1.9, z: -33.9, rot: { x: 0, y: 0, z: 0 } },
     { x: -3.2, y: 1.9, z: -32.3, rot: { x: 0, y: 0, z: 0 } },
@@ -176,36 +170,37 @@ const initRestorant3D = (options: InitOptions = {}) => {
 
   const tableBellMeshes: THREE.Object3D[] = [];
 
-  // =============== SOUND SETUP ===============
-  // Create audio context and sound
   let audioContext: AudioContext | null = null;
   let bellSoundBuffer: AudioBuffer | null = null;
   let isSoundLoaded = false;
 
-  // Function to initialize audio
   const initAudio = () => {
-    if (audioContext) return; // Already initialized
+    if (audioContext) return;
     
-    audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const AudioContextConstructor = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextConstructor) return;
     
-    // Load bell sound
+    audioContext = new AudioContextConstructor();
+    
     fetch("/BellSound.mp3")
       .then(response => response.arrayBuffer())
-      .then(arrayBuffer => audioContext!.decodeAudioData(arrayBuffer))
+      .then(arrayBuffer => {
+        if (!audioContext) return;
+        return audioContext.decodeAudioData(arrayBuffer);
+      })
       .then(buffer => {
-        bellSoundBuffer = buffer;
-        isSoundLoaded = true;
-        console.log("Bell sound loaded successfully");
+        if (buffer) {
+          bellSoundBuffer = buffer;
+          isSoundLoaded = true;
+        }
       })
       .catch(error => {
         console.error("Error loading bell sound:", error);
       });
   };
 
-  // Function to play bell sound
   const playBellSound = () => {
     if (!audioContext || !bellSoundBuffer || !isSoundLoaded) {
-      console.log("Sound not ready yet");
       return;
     }
 
@@ -213,52 +208,120 @@ const initRestorant3D = (options: InitOptions = {}) => {
     source.buffer = bellSoundBuffer;
     source.connect(audioContext.destination);
     
-    // Add some variation to the sound
-    const playbackRate = 0.9 + Math.random() * 0.2; // 0.9 to 1.1
-    source.playbackRate.value = playbackRate;
+    source.playbackRate.value = 1.0;
     
     source.start(0);
-    console.log("Playing bell sound");
   };
 
-  // =============== CLICK HANDLING ===============
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
 
-  // Function to handle clicks
+  const getDateTimeFromUI = () => {
+    const dateElement = document.getElementById('reservation-date') as HTMLInputElement;
+    
+    const fromHourElement = document.getElementById('time-from-hour') as HTMLSelectElement;
+    const fromMinuteElement = document.getElementById('time-from-minute') as HTMLSelectElement;
+    const toHourElement = document.getElementById('time-to-hour') as HTMLSelectElement;
+    const toMinuteElement = document.getElementById('time-to-minute') as HTMLSelectElement;
+    
+    const date = dateElement?.value || '';
+    const timeFrom = fromHourElement && fromMinuteElement 
+      ? `${fromHourElement.value}:${fromMinuteElement.value}`
+      : '';
+    const timeTo = toHourElement && toMinuteElement
+      ? `${toHourElement.value}:${toMinuteElement.value}`
+      : '';
+    
+    return { date, timeFrom, timeTo };
+  };
+
+  const findBellFromObject = (object: THREE.Object3D): THREE.Object3D | null => {
+    if (tableBellMeshes.includes(object)) {
+      return object;
+    }
+    
+    if (object.userData?.seatId !== undefined) {
+      return object;
+    }
+    
+    let current = object;
+    while (current.parent) {
+      current = current.parent;
+      if (tableBellMeshes.includes(current) || current.userData?.seatId !== undefined) {
+        return current;
+      }
+    }
+    
+    return null;
+  };
+
   const handleClick = (event: MouseEvent) => {
-    // Calculate mouse position in normalized device coordinates
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     
-    // Update the picking ray with the camera and mouse position
     raycaster.setFromCamera(mouse, camera);
     
-    // Calculate objects intersecting the picking ray (only visible bells)
-    const intersects = raycaster.intersectObjects(tableBellMeshes.filter(bell => bell.visible));
+    const intersects = raycaster.intersectObjects(scene.children, true);
     
     if (intersects.length > 0) {
-      const clickedBell = intersects[0].object;
-      const bellId = clickedBell.userData.bellId;
-      const seatId = clickedBell.userData.seatId;
+      const clickedObject = intersects[0].object;
       
-      console.log(`Clicked bell ${bellId} (seat ${seatId})`);
+      const bellObject = findBellFromObject(clickedObject);
       
-      // Play bell sound
+      if (!bellObject) {
+        return;
+      }
+      
+      const bellId = bellObject.userData?.bellId;
+      const seatId = bellObject.userData?.seatId;
+      
+      if (seatId === undefined) {
+        console.error('Bell object does not have seatId in userData:', bellObject);
+        alert('Error: This bell is not properly configured. Please try another table.');
+        return;
+      }
+      
       playBellSound();
       
-      // Animate the bell
-      animateBellRing(clickedBell);
+      animateBellRing(bellObject);
       
-      // Dispatch custom event
-      const bellEvent = new CustomEvent('bell-clicked', {
+      const { date, timeFrom, timeTo } = getDateTimeFromUI();
+      
+      if (date && timeFrom && timeTo) {
+        if (timeFrom === "00:00" && timeTo === "00:00") {
+          alert('Please select valid time slots (not both 00:00)!');
+          return;
+        }
+        
+        const seatIdStr = seatId.toString();
+        if (!seatIdStr && seatIdStr !== '0') {
+          console.error('Cannot convert seatId to string:', seatId);
+          alert('Error: Invalid seat ID. Please try another table.');
+          return;
+        }
+        
+        const queryParams = new URLSearchParams({
+          seat_id: seatIdStr,
+          date: date,
+          from: timeFrom,
+          to: timeTo
+        });
+        
+        window.location.href = `/reserve?${queryParams.toString()}`;
+        return;
+      } else {
+        console.warn('Date/time values are missing or incomplete');
+        alert('Please select date and time first using the form on the page!');
+      }
+      
+      const bellEvent = new CustomEvent<CustomEventDetail>('bell-clicked', {
         detail: { 
           bellId: bellId,
           seatId: seatId,
           position: {
-            x: clickedBell.position.x,
-            y: clickedBell.position.y,
-            z: clickedBell.position.z
+            x: bellObject.position.x,
+            y: bellObject.position.y,
+            z: bellObject.position.z
           }
         }
       });
@@ -266,12 +329,10 @@ const initRestorant3D = (options: InitOptions = {}) => {
     }
   };
 
-  // Function to animate bell ringing
   const animateBellRing = (bell: THREE.Object3D) => {
     const originalRotationZ = bell.rotation.z;
     const timeline = gsap.timeline();
     
-    // Ring animation
     timeline.to(bell.rotation, {
       z: originalRotationZ + Math.PI * 0.15,
       duration: 0.08,
@@ -293,7 +354,6 @@ const initRestorant3D = (options: InitOptions = {}) => {
       ease: "elastic.out(1, 0.5)"
     });
     
-    // Add subtle bounce
     timeline.to(bell.position, {
       y: bell.position.y + 0.02,
       duration: 0.04,
@@ -303,24 +363,26 @@ const initRestorant3D = (options: InitOptions = {}) => {
     }, 0);
   };
 
-  // LOAD TABLE BELLS - VISIBLE BY DEFAULT WITH TEXTURES
+  const updateReservationVisibility = (reservedSeatIds: number[]) => {
+    reservedMeshes.forEach((seat) => {
+      const isReserved = reservedSeatIds.includes(seat.userData.seatId);
+      seat.visible = isReserved;
+    });
+    
+    tableBellMeshes.forEach((bell) => {
+      const isReserved = reservedSeatIds.includes(bell.userData.seatId);
+      bell.visible = !isReserved; 
+    });
+  };
+
   loader.load("/bell.glb", 
     (gltf) => {
-      console.log("Table bell GLB loaded successfully!");
-      
-      // Check if model has textures
       gltf.scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          console.log("Mesh found:", child.name);
-          console.log("Material:", child.material);
-          
-          // Fix material settings for better texture rendering
           if (child.material) {
-            // Ensure material properties are set correctly
             child.material.side = THREE.DoubleSide;
             child.material.needsUpdate = true;
             
-            // If material is MeshStandardMaterial or similar
             if (child.material instanceof THREE.MeshStandardMaterial) {
               child.material.roughness = 1.0;
               child.material.metalness = 0.5;
@@ -333,7 +395,6 @@ const initRestorant3D = (options: InitOptions = {}) => {
       tableBellPositions.forEach((p, index) => {
         const bell = gltf.scene.clone(true);
         
-        // NO scaling - keep original Blender scale
         bell.position.set(p.x, p.y, p.z);
         bell.rotation.set(
           THREE.MathUtils.degToRad(p.rot.x),
@@ -341,80 +402,99 @@ const initRestorant3D = (options: InitOptions = {}) => {
           THREE.MathUtils.degToRad(p.rot.z)
         );
         
-        // BELLS ARE VISIBLE BY DEFAULT!
         bell.visible = true;
         
-        bell.userData.bellId = index;
-        bell.userData.seatId = index;
+        bell.userData = {
+          bellId: index,
+          seatId: index,
+          isBell: true
+        };
+        
+        bell.traverse((child) => {
+          if (!child.userData) {
+            child.userData = {};
+          }
+          child.userData.bellId = index;
+          child.userData.seatId = index;
+          child.userData.isBellPart = true;
+        });
         
         tableBellMeshes.push(bell);
         scene.add(bell);
-        
-        console.log(`Bell ${index} added and visible at (${p.x}, ${p.y}, ${p.z})`);
       });
-
-      console.log(`Loaded ${tableBellMeshes.length} table bells - ALL VISIBLE AND CLICKABLE`);
       
-      // Initialize audio when bells are loaded
       initAudio();
       
-      // Add click listener
       window.addEventListener('click', handleClick);
       
-      // Add hover effect for better UX
       window.addEventListener('mousemove', (event) => {
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         
         raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(tableBellMeshes.filter(bell => bell.visible));
+        const intersects = raycaster.intersectObjects(scene.children, true);
         
-        // Change cursor when hovering over a bell
-        if (intersects.length > 0) {
-          canvas.style.cursor = 'pointer';
-        } else {
-          canvas.style.cursor = 'default';
+        let isHoveringBell = false;
+        for (const intersect of intersects) {
+          const bellObject = findBellFromObject(intersect.object);
+          if (bellObject && bellObject.visible) {
+            isHoveringBell = true;
+            break;
+          }
         }
+        
+        canvas.style.cursor = isHoveringBell ? 'pointer' : 'default';
       });
 
-      // Still listen to reservation updates if you want to hide/show later
-      window.addEventListener("update-reservations", (e: any) => {
-        const reservedSeatIds: number[] = e.detail;
-        tableBellMeshes.forEach((bell) => {
-          // Optional: You can comment this out if you want bells always visible
-          // bell.visible = reservedSeatIds.includes(bell.userData.seatId);
-        });
+      window.addEventListener("update-reservations", (e: Event) => {
+        const customEvent = e as UpdateReservationsEvent;
+        const reservedSeatIds: number[] = customEvent.detail;
+        updateReservationVisibility(reservedSeatIds);
       });
 
-      // Expose functions globally for testing
-      (window as any).testBellSound = () => {
+      (window as Window & { testBellSound?: () => void }).testBellSound = () => {
         playBellSound();
       };
       
-      (window as any).ringBellById = (bellId: number) => {
+      (window as Window & { ringBellById?: (bellId: number) => void }).ringBellById = (bellId: number) => {
         const bell = tableBellMeshes.find(b => b.userData.bellId === bellId);
-        if (bell) {
+        if (bell && bell.visible) {
           playBellSound();
           animateBellRing(bell);
         }
       };
+      
+      (window as Window & { updateReservations?: (seatIds: number[]) => void }).updateReservations = (seatIds: number[]) => {
+        updateReservationVisibility(seatIds);
+      };
+
+      (window as Window & { testRedirect?: (seatId: number) => void }).testRedirect = (seatId: number) => {
+        const queryParams = new URLSearchParams({
+          seat_id: seatId.toString(),
+          date: '2024-01-15',
+          from: '18:00',
+          to: '20:00'
+        });
+        window.location.href = `/reserve?${queryParams.toString()}`;
+      };
+
+      (window as Window & { debugBells?: () => void }).debugBells = () => {
+        tableBellMeshes.forEach((bell) => {
+          bell.traverse((child) => {
+            return;
+          });
+        });
+      };
     },
-    // Progress callback
-    (progress) => {
-      console.log(`Loading bell: ${Math.round(progress.loaded / progress.total * 100)}%`);
-    },
-    // Error callback
+    undefined,
     (error) => {
       console.error("Error loading bell.glb:", error);
-      
-      // Add a simple colored sphere as fallback so we can see SOMETHING
-      console.log("Adding fallback bell (colored sphere)");
       
       tableBellPositions.forEach((p, index) => {
         const fallbackBell = new THREE.Mesh(
           new THREE.SphereGeometry(0.2, 16, 16),
           new THREE.MeshStandardMaterial({ 
-            color: 0xffaa00, // Orange color
+            color: 0xffaa00,
             metalness: 0.5,
             roughness: 0.5
           })
@@ -426,21 +506,21 @@ const initRestorant3D = (options: InitOptions = {}) => {
           THREE.MathUtils.degToRad(p.rot.z)
         );
         fallbackBell.visible = true;
-        fallbackBell.userData.bellId = index;
-        fallbackBell.userData.seatId = index;
-        fallbackBell.userData.isFallback = true;
+        
+        fallbackBell.userData = {
+          bellId: index,
+          seatId: index,
+          isFallback: true
+        };
         
         scene.add(fallbackBell);
         tableBellMeshes.push(fallbackBell);
       });
       
-      // Initialize audio even with fallback bells
       initAudio();
-      // Add click listener for fallback bells too
       window.addEventListener('click', handleClick);
     }
   );
-  // =============== END TABLE BELLS ===============
 
   const moveNext = () => {
     if (!hasEntered) {

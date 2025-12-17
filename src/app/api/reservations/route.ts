@@ -33,8 +33,6 @@ export async function GET(req: Request) {
   // ✅ CRITICAL FIX: Convert seat_id from string to number
   const reservedSeatIds = data.map((r) => Number(r.seat_id));
 
-  console.log("Found reserved seats (as numbers):", reservedSeatIds);
-
   return NextResponse.json({
     reservedSeats: reservedSeatIds, // Now an array of numbers [1]
   });

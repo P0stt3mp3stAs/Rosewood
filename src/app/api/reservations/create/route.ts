@@ -11,6 +11,7 @@ interface ReservationBody {
   name: string;
   email: string;
   phone: string;
+  passcode: string;
   menu_items?: string[];
 }
 
@@ -23,6 +24,7 @@ interface ReservationRecord {
   name: string;
   email: string;
   phone: string;
+  passcode: string;
   menu_items: string[];
   is_active: boolean;
   created_at?: string;
@@ -40,11 +42,12 @@ export async function POST(req: NextRequest) {
       name,
       email,
       phone,
+      passcode,
       menu_items = []
     } = body;
     
     // Validate required fields
-    if (!seat_id || !date || !time_from || !time_to || !name || !email || !phone) {
+    if (!seat_id || !date || !time_from || !time_to || !name || !email || !phone || !passcode) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -64,6 +67,15 @@ export async function POST(req: NextRequest) {
     if (phone.length < 5) {
       return NextResponse.json(
         { error: "Phone number is too short" },
+        { status: 400 }
+      );
+    }
+    
+    // Validate passcode - must be exactly 4 digits
+    const passcodeRegex = /^\d{4}$/;
+    if (!passcodeRegex.test(passcode)) {
+      return NextResponse.json(
+        { error: "Passcode must be exactly 4 digits" },
         { status: 400 }
       );
     }
@@ -105,6 +117,7 @@ export async function POST(req: NextRequest) {
           name,
           email,
           phone,
+          passcode, // Store the passcode
           menu_items,
           is_active: true
         }

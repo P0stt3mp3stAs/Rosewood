@@ -42,7 +42,7 @@ interface UpdateData {
 }
 
 export default function EditReservationPage() {
-  const [step, setStep] = useState<"search" | "edit" | "success">("search");
+  const [step, setStep] = useState<"search" | "edit" | "success" | "cancelled">("search");
   const [id, setId] = useState("");
   const [passcode, setPasscode] = useState("");
   const [reservation, setReservation] = useState<ReservationData | null>(null);
@@ -58,6 +58,8 @@ export default function EditReservationPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<number, number>>({});
   const [updatedReservation, setUpdatedReservation] = useState<ReservationData | null>(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     fetchMenu();
@@ -142,6 +144,29 @@ export default function EditReservationPage() {
       setError(err instanceof Error ? err.message : "Update failed");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancelReservation = async () => {
+    setCancelling(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/edit-reservation/${id}?passcode=${passcode}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Cancellation failed");
+
+      setReservation(data.reservation);
+      setShowCancelModal(false);
+      setStep("cancelled");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Cancellation failed");
+      setShowCancelModal(false);
+    } finally {
+      setCancelling(false);
     }
   };
 
@@ -342,6 +367,80 @@ export default function EditReservationPage() {
     const value = e.target.value.replace(/\D/g, '');
     if (value.length <= 4) setNewPasscode(value);
   };
+
+  if (step === "cancelled") {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 md:p-8">
+        <div className="max-w-md mx-auto">
+          <Link href="/" className="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 mb-8 transition-colors group">
+            <span className="group-hover:-translate-x-1 transition-transform">←</span>
+            Back to Restaurant
+          </Link>
+
+          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 bg-orange-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Reservation Cancelled</h1>
+              <p className="text-gray-400 mt-2">Your reservation has been successfully cancelled</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-400">Reservation ID</p>
+                    <p className="font-bold text-lg text-white">{reservation?.id}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Status</p>
+                    <p className="font-bold text-lg text-orange-400">Cancelled</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-sm text-gray-400">Original Date & Time</p>
+                    <p className="font-medium text-white">
+                      {formatDate(reservation?.date || '')} at {formatTime(reservation?.time_from || '')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-orange-900/20 border border-orange-700/50 rounded-xl p-4">
+                <div className="flex gap-3">
+                  <svg className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <p className="text-orange-300 font-medium">Cancellation Confirmed</p>
+                    <p className="text-orange-300/80 text-sm mt-1">
+                      Your table has been released and is now available for other guests. You're welcome to make a new reservation at any time available.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/"
+                className="block w-full text-center bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02]"
+              >
+                Return to Home
+              </Link>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-gray-700">
+              <p className="text-sm text-gray-500 text-center">
+                Need to make a new reservation?{" "}
+                <Link href="/" className="text-rose-400 hover:text-rose-300 underline">Book now</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (step === "search") {
     return (
@@ -568,6 +667,72 @@ export default function EditReservationPage() {
           Back to Search
         </button>
 
+        {/* Cancel Confirmation Modal */}
+        {showCancelModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Cancel Reservation?</h3>
+                <p className="text-gray-400">
+                  Are you sure you want to cancel this reservation? This action cannot be undone.
+                </p>
+              </div>
+
+              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4 mb-6">
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Reservation ID:</span>
+                    <span className="text-white font-semibold">{reservation?.id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Date:</span>
+                    <span className="text-white font-semibold">{formatDate(reservation?.date || '')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Time:</span>
+                    <span className="text-white font-semibold">{formatTime(reservation?.time_from || '')}</span>
+                  </div>
+                </div>
+              </div>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-900/30 border border-red-700/50 rounded-lg">
+                  <p className="text-red-300 text-sm">{error}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  disabled={cancelling}
+                  className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all disabled:opacity-50"
+                >
+                  Keep Reservation
+                </button>
+                <button
+                  onClick={handleCancelReservation}
+                  disabled={cancelling}
+                  className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {cancelling ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Cancelling...
+                    </>
+                  ) : (
+                    'Yes, Cancel It'
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 md:p-8 shadow-2xl">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -699,6 +864,7 @@ export default function EditReservationPage() {
                   </span>
                 )}
               </div>
+              
 
               {loadingMenu ? (
                 <div className="text-center py-12">
@@ -822,7 +988,35 @@ export default function EditReservationPage() {
               )}
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
+            {/* <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
+              <button
+                type="button"
+                onClick={() => setStep("search")}
+                className="flex-1 px-6 py-4 bg-gray-900 hover:bg-gray-800 text-gray-300 font-semibold rounded-xl transition-all transform hover:scale-[1.02]"
+              >Cancel</button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] disabled:hover:scale-100 shadow-lg"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Saving Changes...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Update Reservation</span>
+                  </div>
+                )}
+              </button>
+            </div> */}
+          {/* </form> */}
+
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
               <button
                 type="button"
                 onClick={() => setStep("search")}
@@ -849,6 +1043,26 @@ export default function EditReservationPage() {
               </button>
             </div>
           </form>
+
+          <div className="mt-8 pt-6 border-t border-gray-700">
+            <button
+              type="button"
+              onClick={() => setShowCancelModal(true)}
+              className="w-full px-6 py-3 bg-red-900/20 hover:bg-red-900/30 border border-red-700/50 hover:border-red-600 text-red-400 hover:text-red-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Cancel This Reservation
+            </button>
+            {/* <p className="text-sm text-gray-500 text-center mt-4">
+              Need help? reach us at{" "}
+              <a
+                href={`mailto:ghaliwali@gmail.com?subject=${encodeURIComponent('Help with Reservation #' + id)}`}
+                className="text-rose-400 hover:text-rose-300 font-medium underline hover:no-underline"
+              >ghaliwali@gmail.com</a>
+            </p> */}
+          </div>
 
           <div className="mt-8 pt-6 border-t border-gray-700">
             <p className="text-sm text-gray-500 text-center">

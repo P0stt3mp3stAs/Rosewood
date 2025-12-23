@@ -71,10 +71,10 @@ const initRestorant3D = (options: InitOptions = {}) => {
     { pos: new THREE.Vector3(-6.5, 3.5, -35.8), rot: { x: 0, y: 185, z: 0 } },
     { pos: new THREE.Vector3(-6.5, 3.5, -35.8), rot: { x: 0, y: 185, z: 0 } },
     { pos: new THREE.Vector3(-3.3, 3.5, -34), rot: { x: 0, y: 180, z: 0 } },
-    { pos: new THREE.Vector3(-0.5, 3.5, -36), rot: { x: 0, y: 175, z: 0 } },
+    { pos: new THREE.Vector3(-0.5, 3.5, -35.8), rot: { x: 0, y: 175, z: 0 } },
     { pos: new THREE.Vector3(3.5, 3.5, -34), rot: { x: 0, y: 150, z: 0 } },
-    { pos: new THREE.Vector3(2, 1.5, -31), rot: { x: 0, y: 165, z: 0 } },
-    { pos: new THREE.Vector3(-1, 1.5, -31), rot: { x: 0, y: 165, z: 0 } },
+    { pos: new THREE.Vector3(2, 1.5, -30.8), rot: { x: 0, y: 165, z: 0 } },
+    { pos: new THREE.Vector3(-1, 1.5, -30.8), rot: { x: 0, y: 165, z: 0 } },
     { pos: new THREE.Vector3(-7.5, 1.5, -26.8), rot: { x: 0, y: 240, z: 0 } },
     { pos: new THREE.Vector3(-8, 1.5, -23), rot: { x: 0, y: 270, z: 0 } },
     { pos: new THREE.Vector3(-8, 1.5, -17), rot: { x: 0, y: 270, z: 0 } },
@@ -151,10 +151,10 @@ const initRestorant3D = (options: InitOptions = {}) => {
   const tableBellPositions = [
     { x: -6.25, y: 1.9, z: -33.9, rot: { x: 0, y: 0, z: 0 } },
     { x: -3.2, y: 1.9, z: -32.3, rot: { x: 0, y: 0, z: 0 } },
-    { x: -0.5, y: 1.9, z: -33.9, rot: { x: 0, y: 0, z: 0 } },
+    { x: -0.5, y: 1.9, z: -33.9, rot: { x: 0, y: 0, z: 0 } }, //not clickable
     { x: 2.67, y: 1.9, z: -32.4, rot: { x: 0, y: -30, z: 0 } },
-    { x: 1.1, y: -0.10, z: -29, rot: { x: 0, y: -30, z: 0 } },
-    { x: -1.7, y: -0.10, z: -29, rot: { x: 0, y: -20, z: 0 } },
+    { x: 1.1, y: -0.10, z: -29, rot: { x: 0, y: -30, z: 0 } }, //not clickable
+    { x: -1.7, y: -0.10, z: -29, rot: { x: 0, y: -20, z: 0 } }, //not clickable
     { x: -6.1, y: -0.10, z: -25.5, rot: { x: 0, y: 45, z: 0 } },
     { x: -5.8, y: -0.10, z: -22.36, rot: { x: 0, y: 75, z: 0 } },
     { x: -5.8, y: -0.10, z: -16.8, rot: { x: 0, y: 75, z: 0 } },

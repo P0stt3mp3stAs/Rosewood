@@ -541,230 +541,253 @@ function ReservePageContent() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
+    <div className="min-h-screen bg-white text-black p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        <Link href="/" className="inline-flex items-center text-rose-400 hover:text-rose-300 mb-6">
+        <Link
+          href="/"
+          className="inline-flex items-center text-[#630620] hover:text-[#F87070] mb-6 font-semibold"
+        >
           ← Back to Restaurant
         </Link>
-        
-        <div className="bg-gray-800 rounded-lg p-6 md:p-8">
-          <h1 className="text-2xl font-bold mb-2">Reserve Table {seatId}</h1>
-          
-          <div className="mb-6 p-4 bg-gray-700 rounded">
-            <h2 className="font-semibold mb-2">Reservation Details</h2>
-            <div className="space-y-1 text-sm text-gray-300">
-              <p><span className="text-gray-400">Date:</span> {formatDate(date)}</p>
-              <p><span className="text-gray-400">Time:</span> {formatTime(from)} - {formatTime(to)}</p>
-              <p><span className="text-gray-400">Table:</span> #{seatId}</p>
+
+        <div className="bg-[#D17272]/20 rounded-4xl p-6 md:p-8 border-5 border-[#630620]/70">
+          <h1 className="text-2xl font-black mb-6">
+            Reserve Table #{seatId}
+          </h1>
+
+          {/* Reservation Details */}
+          <div className="mb-8 p-5 bg-[#D17272] rounded-3xl text-center max-w-md mx-auto">
+            <h2 className="font-black text-xl mb-3">
+              Reservation Details
+            </h2>
+
+            <div className="space-y-1 text-sm font-bold">
+              <p>
+                <span className="font-thin">Date:</span>{" "}
+                {formatDate(date)}
+              </p>
+              <p>
+                <span className="font-thin">Time:</span>{" "}
+                {formatTime(from)} – {formatTime(to)}
+              </p>
+              <p>
+                <span className="font-thin">Table:</span> #{seatId}
+              </p>
             </div>
           </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2 border-t border-[#D17272]">
+            {/* User Info */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium mb-1">
-                  Full Name *
+                <label className="block text-sm font-medium mb-1">
+                  Full Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-rose-500"
-                  placeholder="name"
+                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
+                  placeholder="Your name"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                  Email Address *
+                <label className="block text-sm font-medium mb-1">
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="email@example.com"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium mb-1">
-                  Phone Number *
+                <label className="block text-sm font-medium mb-1">
+                  Phone <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
-                  id="phone"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-rose-500"
-                  placeholder="(000) 000-00-0000"
+                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
+                  placeholder="(000) 000-0000"
                 />
               </div>
-              
+
               <div>
-                <label htmlFor="passcode" className="block text-sm font-medium mb-1">
-                  Create 4-Digit Passcode *
+                <label className="block text-sm font-medium mb-1">
+                  4-Digit Passcode <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  id="passcode"
                   value={passcode}
                   onChange={handlePasscodeChange}
-                  required
                   inputMode="numeric"
                   pattern="[0-9]{4}"
                   maxLength={4}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-rose-500 text-center text-2xl tracking-widest font-semibold"
+                  required
+                  className="w-full px-4 py-2 bg-[#D17272] rounded-full text-center text-2xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="••••"
                 />
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-[9px] text-gray-400 mt-1 ml-3 leading-tight">
                   You'll need this passcode to manage your reservation
                 </p>
               </div>
             </div>
-            
-            <div className="pt-6 border-t border-gray-700">
-              <h2 className="text-xl font-semibold mb-4">Pre-order Menu Items (Optional)</h2>
-              <p className="text-sm text-gray-400 mb-4">
-                Select items you'd like to order. You can also order at the table.
+
+            {/* Pre-order Section */}
+            <div className="pt-2 border-t border-[#D17272]">
+              <h2 className="text-xl font-black mb-2">
+                Pre-order Menu (Optional)
+              </h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Select items now or order later at the table.
               </p>
-              
+
               {loadingMenu ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rose-500 mx-auto"></div>
-                  <p className="text-gray-400 mt-2 text-sm">Loading menu...</p>
+                <div className="text-center py-10">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D17272] mx-auto" />
+                  <p className="text-gray-500 mt-3 text-sm">
+                    Loading menu…
+                  </p>
                 </div>
               ) : menuData ? (
-                <div className="space-y-4">
+                <div className="space-y-6">
+                  {/* Categories */}
                   <div className="flex flex-wrap gap-2">
                     {menuData.categories.map((category) => (
                       <button
                         key={category}
                         type="button"
-                        onClick={() => setSelectedCategory(
-                          selectedCategory === category ? null : category
-                        )}
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        onClick={() =>
+                          setSelectedCategory(
+                            selectedCategory === category
+                              ? null
+                              : category
+                          )
+                        }
+                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                           selectedCategory === category
-                            ? 'bg-rose-600 text-white'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            ? "bg-[#D17272] text-white"
+                            : "bg-rose-100 text-[#D17272] hover:bg-rose-200"
                         }`}
                       >
                         {formatCategoryName(category)}
                       </button>
                     ))}
                   </div>
-                  
-                  {selectedCategory && menuData.grouped[selectedCategory] && (
-                    <div className="bg-gray-700 rounded-lg p-4">
-                      <h3 className="font-semibold mb-3 text-lg">
-                        {formatCategoryName(selectedCategory)}
-                      </h3>
-                      <div className="space-y-3">
+
+                  {selectedCategory &&
+                    menuData.grouped[selectedCategory] && (
+                      <div className="bg-[#D17272]/20 rounded-3xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {menuData.grouped[selectedCategory].map((item) => {
                           const quantity = getItemQuantity(item.id);
                           return (
                             <div
                               key={item.id}
-                              className="p-4 rounded bg-gray-800 border border-gray-700"
+                              className="bg-white rounded-2xl p-3 border border-rose-200 flex flex-col justify-between"
                             >
-                              <div className="flex justify-between items-start gap-4">
-                                <div className="flex-1">
-                                  <h4 className="font-medium text-white">{item.name}</h4>
-                                  <p className="text-sm text-gray-400 mt-1">
-                                    {item.description}
-                                  </p>
-                                  <p className="text-rose-400 font-semibold mt-2">
-                                    ${item.price.toFixed(2)}
-                                  </p>
-                                </div>
-                                
-                                <div className="flex items-center gap-3">
-                                  <button
-                                    type="button"
-                                    onClick={() => decrementItem(item.id)}
-                                    disabled={quantity === 0}
-                                    className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 disabled:text-gray-600 disabled:cursor-not-allowed flex items-center justify-center text-white font-bold transition-colors"
-                                  >
-                                    −
-                                  </button>
-                                  
-                                  <span className="w-8 text-center font-semibold text-white">
-                                    {quantity}
-                                  </span>
-                                  
-                                  <button
-                                    type="button"
-                                    onClick={() => incrementItem(item.id)}
-                                    className="w-8 h-8 rounded-full bg-rose-600 hover:bg-rose-700 flex items-center justify-center text-white font-bold transition-colors"
-                                  >
-                                    +
-                                  </button>
-                                </div>
+                              <div>
+                                <h4 className="font-semibold text-sm">{item.name}</h4>
+                                <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                                <p className="text-[#D17272] font-bold text-sm mt-1">
+                                  ${item.price.toFixed(2)}
+                                </p>
+                              </div>
+
+                              <div className="flex items-center gap-2 mt-3">
+                                <button
+                                  type="button"
+                                  onClick={() => decrementItem(item.id)}
+                                  disabled={quantity === 0}
+                                  className="w-7 h-7 rounded-full bg-rose-100 text-[#D17272] font-bold text-sm disabled:opacity-40"
+                                >
+                                  −
+                                </button>
+                                <span className="w-5 text-center font-bold text-sm">{quantity}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => incrementItem(item.id)}
+                                  className="w-7 h-7 rounded-full bg-[#D17272] text-white font-bold text-sm"
+                                >
+                                  +
+                                </button>
                               </div>
                             </div>
                           );
                         })}
                       </div>
-                    </div>
-                  )}
-                  
+                    )}
+
+                  {/* Summary */}
                   {getTotalItems() > 0 && (
-                    <div className="bg-gray-700 rounded-lg p-4">
-                      <h3 className="font-semibold mb-3">
-                        Your Order ({getTotalItems()} {getTotalItems() === 1 ? 'item' : 'items'})
+                    <div className="bg-white rounded-3xl p-5 border border-rose-200">
+                      <h3 className="font-black mb-3">
+                        Your Order ({getTotalItems()})
                       </h3>
-                      <div className="space-y-2">
-                        {Object.entries(cart).map(([itemId, quantity]) => {
-                          const item = menuData.items.find(i => i.id === Number(itemId));
-                          return item ? (
-                            <div key={itemId} className="flex justify-between text-sm">
-                              <span className="text-gray-300">
-                                {quantity}x {item.name}
+
+                      {Object.entries(cart).map(([id, qty]) => {
+                        const item = menuData.items.find(
+                          (i) => i.id === Number(id)
+                        );
+                        return (
+                          item && (
+                            <div
+                              key={id}
+                              className="flex justify-between text-sm"
+                            >
+                              <span>
+                                {qty}× {item.name}
                               </span>
-                              <span className="text-rose-400 font-medium">
-                                ${(item.price * quantity).toFixed(2)}
+                              <span className="font-semibold text-[#D17272]">
+                                ${(item.price * qty).toFixed(2)}
                               </span>
                             </div>
-                          ) : null;
-                        })}
-                        <div className="pt-3 mt-3 border-t border-gray-600 flex justify-between font-semibold text-base">
-                          <span>Total:</span>
-                          <span className="text-rose-400">
-                            ${calculateTotal().toFixed(2)}
-                          </span>
-                        </div>
+                          )
+                        );
+                      })}
+
+                      <div className="pt-3 mt-3 border-t flex justify-between font-black">
+                        <span>Total</span>
+                        <span className="text-[#D17272]">
+                          ${calculateTotal().toFixed(2)}
+                        </span>
                       </div>
                     </div>
                   )}
                 </div>
               ) : (
-                <p className="text-gray-400 text-sm">Unable to load menu.</p>
+                <p className="text-gray-500 text-sm">
+                  Unable to load menu.
+                </p>
               )}
             </div>
-            
+
             {error && (
-              <div className="p-3 bg-red-900/50 border border-red-700 rounded text-red-200">
+              <div className="bg-red-50 border border-red-200 text-[#D17272] p-4 rounded-xl text-sm">
                 {error}
               </div>
             )}
-            
+
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-rose-600 hover:bg-rose-700 disabled:bg-gray-600 text-white font-semibold py-3 px-4 rounded transition-colors"
+              className="w-full bg-[#D17272] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
             >
-              {isSubmitting ? 'Processing...' : 'Confirm Reservation'}
+              {isSubmitting ? "Processing…" : "Confirm Reservation"}
             </button>
           </form>
-          
-          <p className="mt-6 text-xs text-gray-400 text-center">
-            By confirming, you agree to our reservation policy. Cancellations must be made at least 2 hours in advance.
+
+          <p className="mt-6 text-[11px] text-gray-400 text-center">
+            Cancellations must be made at least 2 hours in advance.
           </p>
         </div>
       </div>

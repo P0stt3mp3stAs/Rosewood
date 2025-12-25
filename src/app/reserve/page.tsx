@@ -433,7 +433,6 @@ function ReservePageContent() {
       if (!emailResponse.ok) {
         alert(`Email failed: ${emailData.error || 'Unknown error'}`);
       } else {
-        alert('✅ PDF sent to your email!');
       }
       
     } catch (error) {
@@ -497,41 +496,47 @@ function ReservePageContent() {
   
   if (success && reservationData) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white p-8">
-        <div className="max-w-md mx-auto bg-gray-800 p-8 rounded-lg text-center">
-          <div className="text-green-400 text-5xl mb-4">✓</div>
-          <h1 className="text-2xl font-bold mb-4">Reservation Confirmed!</h1>
-          <p className="mb-2">Your table has been successfully reserved.</p>
+      <div className="min-h-screen bg-white text-black p-4 md:p-8 relative flex items-center justify-center">
+        <div 
+          className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/wood.svg)',
+            backgroundSize: '200%'
+          }}
+        />
+        <div className="max-w-md mx-auto bg-[#630620]/70 p-8 rounded-3xl text-center relative z-10">
+          <h1 className="text-2xl text-white font-bold mb-4"> <span className="text-[#D17272] text-5xl mb-4">✓</span> Reservation Confirmed!</h1>
+          <p className="mb-2 text-black">Your table has been successfully reserved.</p>
           
-          <div className="my-6 p-4 bg-gray-700 rounded-lg border-2 border-rose-500">
-            <p className="text-sm text-gray-300 mb-2">Your Reservation Passcode:</p>
-            <p className="text-3xl font-bold text-rose-400 tracking-widest">{reservationData.passcode}</p>
-            <p className="text-xs text-gray-400 mt-2">
+          <div className="my-6 p-4 bg-[#D17272] rounded-3xl">
+            <p className="text-sm mb-2">Your Reservation Passcode:</p>
+            <p className="text-3xl font-bold text-white tracking-widest">{reservationData.passcode}</p>
+            <p className="text-x mt-2">
               Please save this passcode. You'll need it to manage your reservation.
             </p>
           </div>
           
-          <p className="text-sm text-gray-300 mb-4">
+          <p className="text-sm text-white mb-4">
             📧 A PDF confirmation has been sent to your email.
           </p>
           
           <button
             onClick={generatePDF}
-            className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded mb-4 font-semibold transition-colors"
+            className="w-full bg-[#6AC354] hover:bg-[#62A052] text-white px-6 py-3 rounded-2xl mb-4 font-semibold transition-colors"
           >
             📄 Download Reservation PDF
           </button>
           
           <button
             onClick={generateAndSendEmail}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded mb-4 font-semibold transition-colors"
+            className="w-full bg-[#3961A3] hover:bg-[#244A89] text-white px-6 py-3 rounded-2xl mb-4 font-semibold transition-colors"
           >
             📧 Send PDF to Email Again
           </button>
           
           <Link 
             href="/" 
-            className="block w-full bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded font-semibold transition-colors"
+            className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors"
           >
             Return to Restaurant
           </Link>
@@ -541,8 +546,15 @@ function ReservePageContent() {
   }
   
   return (
-    <div className="min-h-screen bg-white text-black p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-white text-black p-4 md:p-8 relative">
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/wood.svg)',
+          backgroundSize: '200%'
+        }}
+      />
+      <div className="max-w-4xl mx-auto relative z-10">
         <Link
           href="/"
           className="inline-flex items-center text-[#630620] hover:text-[#F87070] mb-6 font-semibold"
@@ -556,7 +568,7 @@ function ReservePageContent() {
           </h1>
 
           {/* Reservation Details */}
-          <div className="mb-8 p-5 bg-[#D17272] rounded-3xl text-center max-w-md mx-auto">
+          <div className="mb-8 p-5 bg-[#CF8989] rounded-3xl text-center max-w-md mx-auto">
             <h2 className="font-black text-xl mb-3">
               Reservation Details
             </h2>
@@ -577,7 +589,7 @@ function ReservePageContent() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 pt-2 border-t border-[#D17272]">
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2 border-t border-[#CF8989]">
             {/* User Info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -589,7 +601,7 @@ function ReservePageContent() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
+                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="Your name"
                 />
               </div>
@@ -603,7 +615,7 @@ function ReservePageContent() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
+                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="email@example.com"
                 />
               </div>
@@ -617,7 +629,7 @@ function ReservePageContent() {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
-                  className="w-full px-4 py-2 bg-[#D17272] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
+                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="(000) 000-0000"
                 />
               </div>
@@ -634,7 +646,7 @@ function ReservePageContent() {
                   pattern="[0-9]{4}"
                   maxLength={4}
                   required
-                  className="w-full px-4 py-2 bg-[#D17272] rounded-full text-center text-2xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
+                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full text-center text-2xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
                   placeholder="••••"
                 />
                 <p className="text-[9px] text-gray-400 mt-1 ml-3 leading-tight">
@@ -644,7 +656,7 @@ function ReservePageContent() {
             </div>
 
             {/* Pre-order Section */}
-            <div className="pt-2 border-t border-[#D17272]">
+            <div className="pt-2 border-t border-[#CF8989]">
               <h2 className="text-xl font-black mb-2">
                 Pre-order Menu (Optional)
               </h2>
@@ -654,7 +666,7 @@ function ReservePageContent() {
 
               {loadingMenu ? (
                 <div className="text-center py-10">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#D17272] mx-auto" />
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#CF8989] mx-auto" />
                   <p className="text-gray-500 mt-3 text-sm">
                     Loading menu…
                   </p>
@@ -676,8 +688,8 @@ function ReservePageContent() {
                         }
                         className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                           selectedCategory === category
-                            ? "bg-[#D17272] text-white"
-                            : "bg-rose-100 text-[#D17272] hover:bg-rose-200"
+                            ? "bg-[#CF8989] text-white"
+                            : "bg-rose-100 text-[#CF8989] hover:bg-rose-200"
                         }`}
                       >
                         {formatCategoryName(category)}
@@ -687,7 +699,7 @@ function ReservePageContent() {
 
                   {selectedCategory &&
                     menuData.grouped[selectedCategory] && (
-                      <div className="bg-[#D17272]/20 rounded-3xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="bg-[#CF8989]/20 rounded-3xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {menuData.grouped[selectedCategory].map((item) => {
                           const quantity = getItemQuantity(item.id);
                           return (
@@ -698,7 +710,7 @@ function ReservePageContent() {
                               <div>
                                 <h4 className="font-semibold text-sm">{item.name}</h4>
                                 <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
-                                <p className="text-[#D17272] font-bold text-sm mt-1">
+                                <p className="text-[#CF8989] font-bold text-sm mt-1">
                                   ${item.price.toFixed(2)}
                                 </p>
                               </div>
@@ -708,7 +720,7 @@ function ReservePageContent() {
                                   type="button"
                                   onClick={() => decrementItem(item.id)}
                                   disabled={quantity === 0}
-                                  className="w-7 h-7 rounded-full bg-rose-100 text-[#D17272] font-bold text-sm disabled:opacity-40"
+                                  className="w-7 h-7 rounded-full bg-rose-100 text-[#CF8989] font-bold text-sm disabled:opacity-40"
                                 >
                                   −
                                 </button>
@@ -716,7 +728,7 @@ function ReservePageContent() {
                                 <button
                                   type="button"
                                   onClick={() => incrementItem(item.id)}
-                                  className="w-7 h-7 rounded-full bg-[#D17272] text-white font-bold text-sm"
+                                  className="w-7 h-7 rounded-full bg-[#CF8989] text-white font-bold text-sm"
                                 >
                                   +
                                 </button>
@@ -747,7 +759,7 @@ function ReservePageContent() {
                               <span>
                                 {qty}× {item.name}
                               </span>
-                              <span className="font-semibold text-[#D17272]">
+                              <span className="font-semibold text-[#CF8989]">
                                 ${(item.price * qty).toFixed(2)}
                               </span>
                             </div>
@@ -757,7 +769,7 @@ function ReservePageContent() {
 
                       <div className="pt-3 mt-3 border-t flex justify-between font-black">
                         <span>Total</span>
-                        <span className="text-[#D17272]">
+                        <span className="text-[#CF8989]">
                           ${calculateTotal().toFixed(2)}
                         </span>
                       </div>
@@ -772,7 +784,7 @@ function ReservePageContent() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-[#D17272] p-4 rounded-xl text-sm">
+              <div className="bg-red-50 border border-red-200 text-[#CF8989] p-4 rounded-xl text-sm">
                 {error}
               </div>
             )}
@@ -780,7 +792,7 @@ function ReservePageContent() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-[#D17272] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
+              className="w-full bg-[#CF8989] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
             >
               {isSubmitting ? "Processing…" : "Confirm Reservation"}
             </button>

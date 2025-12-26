@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 export default function MiniMap() {
   const [reservedSeats, setReservedSeats] = useState<number[]>([]);
   const [currentPosition, setCurrentPosition] = useState(-1);
+  const [isVisible, setIsVisible] = useState(false); // Changed to false for hidden by default
 
   // Define the positions for each seat marker on the SVG (percentage-based)
   const seatPositions = [
@@ -76,90 +77,149 @@ export default function MiniMap() {
     return reservedSeats.includes(seatId) ? 'Reserved' : 'Available';
   };
 
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
+  // SVG icons for the toggle button
+  const ChevronLeft = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  );
+
+  const ChevronRight = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  );
+
   return (
-    <div className="fixed left-4 top-4 z-50 w-48 lg:w-64">
-      <div className="relative bg-black/30 backdrop-blur-sm rounded-2xl p-3 border border-white/10">
-        {/* Legend */}
-        <div className="flex justify-between mb-2 text-[10px] text-white/70">
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span>Available</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-red-500"></div>
-            <span>Reserved</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <span>Current</span>
+    <>
+      {/* Arrow button to toggle visibility - Always visible */}
+      <button
+        onClick={toggleVisibility}
+        className={`fixed top-20 z-50 bg-black/30 backdrop-blur-sm border-2 border-white/10 rounded-2xl transition-all duration-300 hover:bg-black/50 flex items-center ${
+          isVisible ? 'left-[20rem] lg:left-[26rem]' : 'left-0'
+        }`}
+        aria-label={isVisible ? "Hide minimap" : "Show minimap"}
+        title={isVisible ? "Hide minimap" : "Show minimap"}
+      >
+        <div className="p-2">
+          <div className="w-5 h-5 text-white">
+            {isVisible ? <ChevronLeft /> : <ChevronRight />}
           </div>
         </div>
+        <div className="pr-3">
+          {/* Map icon */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="text-white"
+          >
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+          </svg>
+        </div>
+      </button>
 
-        {/* SVG Map Container */}
-        <div className="relative w-full aspect-[4908/8903] bg-[#1E1E1E] rounded-lg overflow-hidden">
-          {/* Background SVG */}
-          <img 
-            src="/miniMap.svg" 
-            alt="Restaurant Map" 
-            className="w-full h-full object-contain"
-          />
+      {/* MiniMap container with slide animation */}
+      <div
+        className={`fixed top-20 z-40 transition-all duration-300 ease-in-out ${
+          isVisible ? 'left-6' : '-left-[30rem]'
+        }`}
+      >
+        <div className="relative bg-black/30 backdrop-blur-sm rounded-3xl p-4.5 border-2 border-white/10 w-72 lg:w-96">
+          {/* Legend */}
+          <div className="flex justify-between mb-3 text-[15px] text-white/70">
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span>Available</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span>Reserved</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <span>Current</span>
+            </div>
+          </div>
 
-          {/* Overlay seat markers */}
-          {seatPositions.map((seat) => (
-            <button
-              key={seat.id}
-              onClick={() => handleSeatClick(seat.id)}
-              style={{
-                position: 'absolute',
-                left: `${seat.x}%`,
-                top: `${seat.y}%`,
-                transform: 'translate(-50%, -50%)',
-              }}
-              className="group relative"
-              title={`Seat ${seat.id} - ${getSeatLabel(seat.id)}`}
-            >
-              {/* Outer glow ring for current position */}
-              {currentPosition === seat.id && (
-                <div 
-                  className="absolute inset-0 rounded-full animate-ping"
+          {/* SVG Map Container */}
+          <div className="relative w-full aspect-[4908/8903] bg-[#1E1E1E] rounded-xl overflow-hidden">
+            {/* Background SVG */}
+            <img 
+              src="/miniMap.svg" 
+              alt="Restaurant Map" 
+              className="w-full h-full object-contain"
+            />
+
+            {/* Overlay seat markers */}
+            {seatPositions.map((seat) => (
+              <button
+                key={seat.id}
+                onClick={() => handleSeatClick(seat.id)}
+                style={{
+                  position: 'absolute',
+                  left: `${seat.x}%`,
+                  top: `${seat.y}%`,
+                  transform: 'translate(-50%, -50%)',
+                }}
+                className="group relative"
+                title={`Seat ${seat.id} - ${getSeatLabel(seat.id)}`}
+              >
+                {/* Outer glow ring for current position */}
+                {currentPosition === seat.id && (
+                  <div 
+                    className="absolute inset-0 rounded-full animate-ping"
+                    style={{
+                      backgroundColor: getSeatColor(seat.id),
+                      width: '30px',
+                      height: '30px',
+                      left: '50%',
+                      top: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      opacity: 0.5,
+                    }}
+                  />
+                )}
+                
+                {/* Main seat indicator */}
+                <div
+                  className="relative w-4.5 h-4.5 lg:w-6 lg:h-6 rounded-full border-3 border-white/30 transition-all duration-200 hover:scale-125 hover:border-white cursor-pointer shadow-xl"
                   style={{
                     backgroundColor: getSeatColor(seat.id),
-                    width: '20px',
-                    height: '20px',
-                    left: '50%',
-                    top: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    opacity: 0.5,
+                    boxShadow: currentPosition === seat.id 
+                      ? `0 0 18px ${getSeatColor(seat.id)}` 
+                      : `0 0 9px ${getSeatColor(seat.id)}`,
                   }}
-                />
-              )}
-              
-              {/* Main seat indicator */}
-              <div
-                className="relative w-3 h-3 lg:w-4 lg:h-4 rounded-full border-2 border-white/30 transition-all duration-200 hover:scale-125 hover:border-white cursor-pointer shadow-lg"
-                style={{
-                  backgroundColor: getSeatColor(seat.id),
-                  boxShadow: currentPosition === seat.id 
-                    ? `0 0 12px ${getSeatColor(seat.id)}` 
-                    : `0 0 6px ${getSeatColor(seat.id)}`,
-                }}
-              >
-                {/* Seat info label on hover */}
-                <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[8px] px-1.5 py-0.5 rounded whitespace-nowrap pointer-events-none">
-                  Seat {seat.id} - {getSeatLabel(seat.id)}
+                >
+                  {/* Seat info label on hover */}
+                  <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-white text-[12px] px-2.25 py-0.75 rounded whitespace-nowrap pointer-events-none">
+                    Seat {seat.id} - {getSeatLabel(seat.id)}
+                  </div>
                 </div>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Status text */}
-        {reservedSeats.length > 0 && (
-          <div className="mt-2 text-center text-[10px] text-white/60">
-            {reservedSeats.length} seat{reservedSeats.length !== 1 ? 's' : ''} reserved
+              </button>
+            ))}
           </div>
-        )}
+
+          {/* Status text */}
+          {reservedSeats.length > 0 && (
+            <div className="mt-3 text-center text-[15px] text-white/60">
+              {reservedSeats.length} seat{reservedSeats.length !== 1 ? 's' : ''} reserved
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

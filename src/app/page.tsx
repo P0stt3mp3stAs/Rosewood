@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import initRestorant3D from "@/components/3D/restorant";
 import FloatingPanel from "@/components/FloatingPanel";
+import MiniMap from "@/components/MiniMap";
 
 export default function Home() {
   const [entered, setEntered] = useState(false);
@@ -104,6 +105,9 @@ export default function Home() {
 
         {/* Floating panel */}
         {entered && <FloatingPanel />}
+
+        {/* MINIMAP HERE */}
+        {entered && <MiniMap />}
       </section>
     </div>
   );

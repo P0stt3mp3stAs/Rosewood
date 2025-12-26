@@ -1,8 +1,10 @@
 <svg width="4908" height="8903" viewBox="0 0 4908 8903" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="4908" height="8903" fill="#1E1E1E"/>
+<g id="Frame 125">
+<rect width="8637" height="11003" transform="translate(-1865 -1050)" fill="white"/>
 <g id="Group 285">
 <g id="bg">
-<path id="Rectangle 1259" d="M0 0H4908V3451.5H4144V8903H0V0Z" fill="#403F40"/>
+<path id="Rectangle 1259" d="M0 0H4908V3451.5V8903H4144H0V0Z" fill="#321010"/>
 <path id="Exclude" d="M4063 3768C4106.08 3768 4141 3802.92 4141 3846V4045H2981V7185H4141V7359C4141 7435.77 4078.77 7498 4002 7498H2744C2700.92 7498 2666 7463.08 2666 7420V3846C2666 3802.92 2700.92 3768 2744 3768H4063Z" fill="#A1A3A3"/>
 <path id="Rectangle 1278" d="M4594 1779.5C4594 1761.55 4608.55 1747 4626.5 1747H4908V1812H4626.5C4608.55 1812 4594 1797.45 4594 1779.5Z" fill="#A1A3A3"/>
 <rect id="Rectangle 1279" x="4224" y="1747" width="370" height="65" rx="32.5" fill="#A1A3A3"/>
@@ -37,71 +39,73 @@
 <rect id="Rectangle 1284" x="2374" y="1747" width="370" height="65" rx="32.5" fill="#A1A3A3"/>
 <rect id="Rectangle 1290" x="154" y="1747" width="370" height="65" rx="32.5" fill="#A1A3A3"/>
 <path id="Rectangle 1291" d="M0 1747H121.5C139.449 1747 154 1761.55 154 1779.5C154 1797.45 139.449 1812 121.5 1812H0V1747Z" fill="#A1A3A3"/>
+<path id="Rectangle 1304" d="M3990 3768H4808C4863.23 3768 4908 3812.77 4908 3868V7398C4908 7453.23 4863.23 7498 4808 7498H3990V3768Z" fill="#A1A3A3"/>
 </g>
-<rect id="16" x="3012.5" y="3544.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="15" x="2416.5" y="4157.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="14" x="2416.5" y="4898.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="13" x="2416.5" y="5639.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="12" x="2416.5" y="6380.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="11" x="2416.5" y="7121.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="10" x="3162.5" y="7528.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
+<rect id="16" x="3012.5" y="3544.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="15" x="2416.5" y="4157.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="14" x="2416.5" y="4898.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="13" x="2416.5" y="5639.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="12" x="2416.5" y="6380.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="11" x="2416.5" y="7121.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="10" x="3162.5" y="7528.5" width="128" height="128" rx="36.5" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
 <g id="9">
-<rect id="Rectangle 1267" x="86" y="8011" width="722" height="358" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1269" x="153" y="8431" width="581" height="280" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1271" x="153" y="7685" width="581" height="270" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
+<rect id="Rectangle 1267" x="86" y="8011" width="722" height="358" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269" x="153" y="8431" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271" x="153" y="7685" width="581" height="270" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="8">
-<rect id="Rectangle 1267_2" x="86" y="6894" width="722" height="358" fill="#A1A3A3" stroke="#005DFF" stroke-width="30"/>
-<rect id="Rectangle 1269_2" x="153" y="7314" width="581" height="280" fill="#A1A3A3" stroke="#005DFF" stroke-width="30"/>
-<rect id="Rectangle 1271_2" x="153" y="6558" width="581" height="280" fill="#A1A3A3" stroke="#005DFF" stroke-width="30"/>
+<rect id="Rectangle 1267_2" x="86" y="6894" width="722" height="358" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269_2" x="153" y="7314" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271_2" x="153" y="6558" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="7">
-<rect id="Rectangle 1267_3" x="88" y="4680" width="722" height="358" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1269_3" x="155" y="5100" width="581" height="280" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1271_3" x="155" y="4344" width="581" height="280" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
+<rect id="Rectangle 1267_3" x="88" y="4680" width="722" height="358" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269_3" x="155" y="5100" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271_3" x="155" y="4344" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="6">
-<rect id="Rectangle 1267_4" x="88" y="3563" width="722" height="358" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1269_4" x="155" y="3983" width="581" height="280" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1271_4" x="155" y="3227" width="581" height="280" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
+<rect id="Rectangle 1267_4" x="88" y="3563" width="722" height="358" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269_4" x="155" y="3983" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271_4" x="155" y="3227" width="581" height="280" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="5">
-<rect id="Rectangle 1267_5" x="2227" y="2544" width="722" height="358" transform="rotate(-90 2227 2544)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1269_5" x="2647" y="2477" width="581" height="280" transform="rotate(-90 2647 2477)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1271_5" x="1891" y="2477" width="581" height="280" transform="rotate(-90 1891 2477)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
+<rect id="Rectangle 1267_5" x="2227" y="2544" width="722" height="358" transform="rotate(-90 2227 2544)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269_5" x="2647" y="2477" width="581" height="280" transform="rotate(-90 2647 2477)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271_5" x="1891" y="2477" width="581" height="280" transform="rotate(-90 1891 2477)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="4">
-<rect id="Rectangle 1267_6" x="3332" y="2544" width="722" height="358" transform="rotate(-90 3332 2544)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1269_6" x="3752" y="2477" width="581" height="280" transform="rotate(-90 3752 2477)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
-<rect id="Rectangle 1271_6" x="2996" y="2477" width="581" height="280" transform="rotate(-90 2996 2477)" fill="#A1A3A3" stroke="#0859E7" stroke-width="30"/>
+<rect id="Rectangle 1267_6" x="3332" y="2544" width="722" height="358" transform="rotate(-90 3332 2544)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1269_6" x="3752" y="2477" width="581" height="280" transform="rotate(-90 3752 2477)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
+<rect id="Rectangle 1271_6" x="2996" y="2477" width="581" height="280" transform="rotate(-90 2996 2477)" fill="#A1A3A3" stroke="#B00000" stroke-width="30"/>
 </g>
 <g id="3">
-<circle id="Ellipse 134" cx="4112.59" cy="1139.59" r="206.5" transform="rotate(-25.2139 4112.59 1139.59)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1272" x="3843.6" y="794.83" width="193" height="193" rx="36.5" transform="rotate(-25.2139 3843.6 794.83)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1273" x="4124.75" y="1391.95" width="193" height="193" rx="36.5" transform="rotate(-25.2139 4124.75 1391.95)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1274" x="4282.74" y="952.807" width="193" height="193" rx="36.5" transform="rotate(-25.2139 4282.74 952.807)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1275" x="3685.62" y="1233.97" width="193" height="193" rx="36.5" transform="rotate(-25.2139 3685.62 1233.97)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
+<circle id="Ellipse 134" cx="4112.59" cy="1139.59" r="206.5" transform="rotate(-25.2139 4112.59 1139.59)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1272" x="3843.6" y="794.83" width="193" height="193" rx="36.5" transform="rotate(-25.2139 3843.6 794.83)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1273" x="4124.75" y="1391.95" width="193" height="193" rx="36.5" transform="rotate(-25.2139 4124.75 1391.95)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1274" x="4282.74" y="952.807" width="193" height="193" rx="36.5" transform="rotate(-25.2139 4282.74 952.807)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1275" x="3685.62" y="1233.97" width="193" height="193" rx="36.5" transform="rotate(-25.2139 3685.62 1233.97)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
 </g>
 <g id="2">
-<circle id="Ellipse 134_2" cx="2852.16" cy="598.145" r="206.5" transform="rotate(15.5008 2852.16 598.145)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1272_2" x="2873.16" y="161.367" width="193" height="193" rx="36.5" transform="rotate(15.5008 2873.16 161.367)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1273_2" x="2696.77" y="797.359" width="193" height="193" rx="36.5" transform="rotate(15.5008 2696.77 797.359)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1274_2" x="3102.96" y="567.562" width="193" height="193" rx="36.5" transform="rotate(15.5008 3102.96 567.562)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1275_2" x="2466.96" y="391.172" width="193" height="193" rx="36.5" transform="rotate(15.5008 2466.96 391.172)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
+<circle id="Ellipse 134_2" cx="2852.16" cy="598.145" r="206.5" transform="rotate(15.5008 2852.16 598.145)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1272_2" x="2873.16" y="161.367" width="193" height="193" rx="36.5" transform="rotate(15.5008 2873.16 161.367)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1273_2" x="2696.77" y="797.359" width="193" height="193" rx="36.5" transform="rotate(15.5008 2696.77 797.359)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1274_2" x="3102.96" y="567.562" width="193" height="193" rx="36.5" transform="rotate(15.5008 3102.96 567.562)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1275_2" x="2466.96" y="391.172" width="193" height="193" rx="36.5" transform="rotate(15.5008 2466.96 391.172)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
 </g>
 <g id="1">
-<circle id="Ellipse 134_3" cx="1857.28" cy="1189.29" r="206.5" transform="rotate(5.21216 1857.28 1189.29)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1272_3" x="1799.92" y="755.788" width="193" height="193" rx="36.5" transform="rotate(5.21216 1799.92 755.788)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1273_3" x="1739.97" y="1413.06" width="193" height="193" rx="36.5" transform="rotate(5.21216 1739.97 1413.06)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1274_3" x="2098.58" y="1114.4" width="193" height="193" rx="36.5" transform="rotate(5.21216 2098.58 1114.4)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1275_3" x="1441.3" y="1054.44" width="193" height="193" rx="36.5" transform="rotate(5.21216 1441.3 1054.44)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
+<circle id="Ellipse 134_3" cx="1857.28" cy="1189.29" r="206.5" transform="rotate(5.21216 1857.28 1189.29)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1272_3" x="1799.92" y="755.788" width="193" height="193" rx="36.5" transform="rotate(5.21216 1799.92 755.788)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1273_3" x="1739.97" y="1413.06" width="193" height="193" rx="36.5" transform="rotate(5.21216 1739.97 1413.06)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1274_3" x="2098.58" y="1114.4" width="193" height="193" rx="36.5" transform="rotate(5.21216 2098.58 1114.4)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1275_3" x="1441.3" y="1054.44" width="193" height="193" rx="36.5" transform="rotate(5.21216 1441.3 1054.44)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
 </g>
 <g id="0">
-<circle id="Ellipse 134_4" cx="743.006" cy="598.009" r="206.5" transform="rotate(18.7919 743.006 598.009)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1272_4" x="789.041" y="163.153" width="193" height="193" rx="36.5" transform="rotate(18.7919 789.041 163.153)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1273_4" x="576.432" y="787.973" width="193" height="193" rx="36.5" transform="rotate(18.7919 576.432 787.973)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1274_4" x="995.143" y="581.871" width="193" height="193" rx="36.5" transform="rotate(18.7919 995.143 581.871)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
-<rect id="Rectangle 1275_4" x="370.322" y="369.262" width="193" height="193" rx="36.5" transform="rotate(18.7919 370.322 369.262)" fill="#A1A3A3" stroke="#005DFF" stroke-width="27"/>
+<circle id="Ellipse 134_4" cx="743.006" cy="598.009" r="206.5" transform="rotate(18.7919 743.006 598.009)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1272_4" x="789.037" y="163.153" width="193" height="193" rx="36.5" transform="rotate(18.7919 789.037 163.153)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1273_4" x="576.432" y="787.973" width="193" height="193" rx="36.5" transform="rotate(18.7919 576.432 787.973)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1274_4" x="995.146" y="581.871" width="193" height="193" rx="36.5" transform="rotate(18.7919 995.146 581.871)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+<rect id="Rectangle 1275_4" x="370.326" y="369.262" width="193" height="193" rx="36.5" transform="rotate(18.7919 370.326 369.262)" fill="#A1A3A3" stroke="#B00000" stroke-width="27"/>
+</g>
 </g>
 </g>
 </svg>

@@ -370,73 +370,58 @@ export default function EditReservationPage() {
 
   if (step === "cancelled") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 md:p-8">
-        <div className="max-w-md mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 mb-8 transition-colors group">
-            <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            Back to Restaurant
-          </Link>
-
-          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-orange-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+      <div className="min-h-screen bg-white text-black p-4 md:p-8 relative flex items-center justify-center">
+        <div 
+          className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/wood.svg)',
+            backgroundSize: '200%'
+          }}
+        />
+        <div className="max-w-md mx-auto bg-[#630620]/70 p-8 rounded-3xl text-center relative z-10">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-[#D64E4E] text-4xl">✕</span>
+          </div>
+          <h1 className="text-3xl text-white font-black mb-4">Reservation Cancelled</h1>
+          <p className="text-black mb-6">Your reservation has been successfully cancelled</p>
+          
+          <div className="my-6 p-4 bg-[#D17272] rounded-3xl">
+            <div className="grid grid-cols-2 gap-4 text-left">
+              <div>
+                <p className="text-xs text-white mb-1">Reservation ID</p>
+                <p className="font-black text-white">{reservation?.id}</p>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Reservation Cancelled</h1>
-              <p className="text-gray-400 mt-2">Your reservation has been successfully cancelled</p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-400">Reservation ID</p>
-                    <p className="font-bold text-lg text-white">{reservation?.id}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Status</p>
-                    <p className="font-bold text-lg text-orange-400">Cancelled</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-sm text-gray-400">Original Date & Time</p>
-                    <p className="font-medium text-white">
-                      {formatDate(reservation?.date || '')} at {formatTime(reservation?.time_from || '')}
-                    </p>
-                  </div>
-                </div>
+              <div>
+                <p className="text-xs text-white mb-1">Status</p>
+                <p className="font-black text-white">Cancelled</p>
               </div>
-
-              <div className="bg-orange-900/20 border border-orange-700/50 rounded-xl p-4">
-                <div className="flex gap-3">
-                  <svg className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div>
-                    <p className="text-orange-300 font-medium">Cancellation Confirmed</p>
-                    <p className="text-orange-300/80 text-sm mt-1">
-                      Your table has been released and is now available for other guests. You're welcome to make a new reservation at any time available.
-                    </p>
-                  </div>
-                </div>
+              <div className="col-span-2">
+                <p className="text-xs text-white mb-1">Date & Time</p>
+                <p className="font-bold text-white">
+                  {formatDate(reservation?.date || '')} at {formatTime(reservation?.time_from || '')}
+                </p>
               </div>
-
-              <Link
-                href="/"
-                className="block w-full text-center bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02]"
-              >
-                Return to Home
-              </Link>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-gray-700">
-              <p className="text-sm text-gray-500 text-center">
-                Need to make a new reservation?{" "}
-                <Link href="/" className="text-rose-400 hover:text-rose-300 underline">Book now</Link>
-              </p>
             </div>
           </div>
+
+          <div className="bg-white/20 rounded-3xl p-4 mb-6">
+            <div className="flex gap-3">
+              <span className="text-[#D64E4E] text-xl">ℹ️</span>
+              <div>
+                <p className="text-white font-semibold">Cancellation Confirmed</p>
+                <p className="text-white/80 text-sm mt-1">
+                  Your table has been released and is now available for other guests.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/"
+            className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors"
+          >
+            Return to Home
+          </Link>
         </div>
       </div>
     );
@@ -444,30 +429,35 @@ export default function EditReservationPage() {
 
   if (step === "search") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 md:p-8">
-        <div className="max-w-md mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 mb-8 transition-colors group">
-            <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            Back to Restaurant
+      <div className="min-h-screen bg-white text-black p-4 md:p-8 relative">
+        <div 
+          className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/wood.svg)',
+            backgroundSize: '200%'
+          }}
+        />
+        <div className="max-w-md mx-auto relative z-10">
+          <Link
+            href="/"
+            className="inline-flex items-center text-[#630620] hover:text-[#F87070] mb-6 font-semibold"
+          >
+            ← Back to Restaurant
           </Link>
 
-          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl">
+          <div className="bg-[#D17272]/20 rounded-4xl p-6 md:p-8 border-5 border-[#630620]/70">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-rose-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-400 to-red-500 bg-clip-text text-transparent">Find Your Reservation</h1>
-              <p className="text-gray-400 mt-2">Enter your reservation details to make changes</p>
+              <h1 className="text-3xl font-black mb-2">
+                Find Your Reservation
+              </h1>
+              <p className="text-gray-600">
+                Enter your reservation details to make changes
+              </p>
             </div>
 
             {error && (
-              <div className="mb-6 p-4 bg-red-900/30 border border-red-700/50 rounded-xl">
-                <div className="flex items-center gap-2 text-red-300">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 text-[#CF8989] rounded-xl text-sm">
+                <div className="flex items-center gap-2">
                   <span className="font-medium">{error}</span>
                 </div>
               </div>
@@ -476,16 +466,13 @@ export default function EditReservationPage() {
             <form onSubmit={handleSearch} className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">Reservation ID</label>
+                  <label className="block text-sm font-semibold mb-2">Reservation ID</label>
                   <div className="relative">
-                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                    </svg>
                     <input
                       type="text"
                       value={id}
                       onChange={(e) => setId(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                      className="w-full pl-10 pr-4 py-3 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                       placeholder="Enter reservation ID"
                       required
                     />
@@ -493,16 +480,13 @@ export default function EditReservationPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">4-digit Passcode</label>
+                  <label className="block text-sm font-semibold mb-2">4-digit Passcode</label>
                   <div className="relative">
-                    <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
                     <input
                       type="text"
                       value={passcode}
                       onChange={handlePasscodeChange}
-                      className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all text-center text-2xl tracking-widest font-bold"
+                      className="w-full pl-10 pr-4 py-3 bg-[#CF8989] rounded-full text-center text-2xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
                       placeholder="••••"
                       maxLength={4}
                       inputMode="numeric"
@@ -510,14 +494,16 @@ export default function EditReservationPage() {
                       required
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">Enter the 4-digit code you received when making the reservation</p>
+                  <p className="text-xs text-gray-500 mt-2 ml-3 leading-tight">
+                    Enter the 4-digit code you received when making the reservation
+                  </p>
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 disabled:opacity-50 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] disabled:hover:scale-100"
+                className="w-full bg-[#CF8989] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
               >
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
@@ -526,19 +512,18 @@ export default function EditReservationPage() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
                     <span>Find Reservation</span>
                   </div>
                 )}
               </button>
             </form>
 
-            <div className="mt-8 pt-6 border-t border-gray-700">
+            <div className="mt-8 pt-6 border-t border-[#CF8989]">
               <p className="text-sm text-gray-500 text-center">
                 Don't have your passcode?{" "}
-                <button className="text-rose-400 hover:text-rose-300 underline">Contact support</button>
+                <button className="text-[#CF8989] hover:text-[#F87070] underline font-medium">
+                  Contact support
+                </button>
               </p>
             </div>
           </div>
@@ -549,107 +534,101 @@ export default function EditReservationPage() {
 
   if (step === "success") {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 md:p-8">
-        <div className="max-w-md mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 mb-8 transition-colors group">
-            <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            Back to Restaurant
-          </Link>
-
-          <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl">
-            <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-green-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+      <div className="min-h-screen bg-white text-black p-4 md:p-8 relative flex items-center justify-center">
+        <div 
+          className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/wood.svg)',
+            backgroundSize: '200%'
+          }}
+        />
+        <div className="max-w-md mx-auto bg-[#630620]/70 p-8 rounded-3xl text-center relative z-10">
+          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-[#6AC354] text-4xl">✓</span>
+          </div>
+          <h1 className="text-3xl text-white font-black mb-4">Reservation Updated!</h1>
+          <p className="text-black mb-6">Your reservation has been successfully updated</p>
+          
+          <div className="my-6 p-4 bg-[#D17272] rounded-3xl">
+            <div className="grid grid-cols-2 gap-4 text-left">
+              <div>
+                <p className="text-xs text-white mb-1">Reservation ID</p>
+                <p className="font-black text-white">{updatedReservation?.id}</p>
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">Reservation Updated!</h1>
-              <p className="text-gray-400 mt-2">Your reservation has been successfully updated</p>
+              <div>
+                <p className="text-xs text-white mb-1">Table</p>
+                <p className="font-black text-white">#{updatedReservation?.seat_id}</p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-xs text-white mb-1">Date & Time</p>
+                <p className="font-bold text-white">
+                  {formatDate(updatedReservation?.date || '')} at {formatTime(updatedReservation?.time_from || '')}
+                </p>
+              </div>
+              <div className="col-span-2">
+                <p className="text-xs text-white mb-1">Passcode</p>
+                <p className="font-black text-white text-2xl tracking-widest">{updatedReservation?.passcode}</p>
+              </div>
             </div>
+          </div>
 
-            <div className="space-y-6">
-              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-400">Reservation ID</p>
-                    <p className="font-bold text-lg text-white">{updatedReservation?.id}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Table</p>
-                    <p className="font-bold text-lg text-white">#{updatedReservation?.seat_id}</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-sm text-gray-400">Date & Time</p>
-                    <p className="font-bold text-lg text-white">
-                      {formatDate(updatedReservation?.date || '')} at {formatTime(updatedReservation?.time_from || '')}
-                    </p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-sm text-gray-400">Passcode</p>
-                    <p className="font-bold text-2xl text-rose-400 tracking-widest">{updatedReservation?.passcode}</p>
-                  </div>
-                </div>
-              </div>
-
-              {getTotalItems() > 0 && (
-                <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-                  <h3 className="font-bold text-white mb-3">Order Summary</h3>
-                  <div className="space-y-3">
-                    {Object.entries(cart).map(([itemId, quantity]) => {
-                      const item = menuData?.items.find(i => i.id === Number(itemId));
-                      return item ? (
-                        <div key={itemId} className="flex justify-between">
-                          <span className="text-gray-300">{quantity}x {item.name}</span>
-                          <span className="text-rose-400 font-bold">${(item.price * quantity).toFixed(2)}</span>
-                        </div>
-                      ) : null;
-                    })}
-                    <div className="pt-3 border-t border-gray-700">
-                      <div className="flex justify-between">
-                        <span className="text-white font-bold">Total</span>
-                        <span className="text-xl font-bold text-rose-400">${calculateTotal().toFixed(2)}</span>
-                      </div>
+          {getTotalItems() > 0 && (
+            <div className="bg-white/20 rounded-3xl p-4 mb-6">
+              <h3 className="font-black text-white mb-3">Order Summary</h3>
+              <div className="space-y-2">
+                {Object.entries(cart).map(([itemId, quantity]) => {
+                  const item = menuData?.items.find(i => i.id === Number(itemId));
+                  return item ? (
+                    <div key={itemId} className="flex justify-between text-sm">
+                      <span className="text-white">{quantity}x {item.name}</span>
+                      <span className="font-bold text-white">${(item.price * quantity).toFixed(2)}</span>
                     </div>
+                  ) : null;
+                })}
+                <div className="pt-2 mt-2 border-t border-white/30">
+                  <div className="flex justify-between">
+                    <span className="text-white font-bold">Total</span>
+                    <span className="text-xl font-black text-white">${calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
-              )}
-
-              <div className="space-y-4">
-                <button
-                  onClick={generatePDF}
-                  className="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Download Updated Confirmation PDF
-                </button>
-
-                <button
-                  onClick={() => setStep("edit")}
-                  className="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-4 px-6 rounded-xl transition-all"
-                >
-                  Make More Changes
-                </button>
-
-                <Link
-                  href="/"
-                  className="block w-full text-center bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 text-white font-bold py-4 px-6 rounded-xl transition-all border border-gray-700"
-                >
-                  Return to Home
-                </Link>
               </div>
             </div>
+          )}
 
-            <div className="mt-8 pt-6 border-t border-gray-700">
-              <p className="text-sm text-gray-500 text-center">
-                Need help? Contact us at{" "}
-                <a
-                  href={`mailto:ghaliwali@gmail.com?subject=${encodeURIComponent('Help with Reservation #' + updatedReservation?.id)}`}
-                  className="text-rose-400 hover:text-rose-300 font-medium underline hover:no-underline"
-                >ghaliwali@gmail.com</a>
-              </p>
-            </div>
+          <div className="space-y-4">
+            <button
+              onClick={generatePDF}
+              className="w-full bg-[#6AC354] hover:bg-[#62A052] text-white px-6 py-3 rounded-2xl font-semibold transition-colors flex items-center justify-center gap-3"
+            >
+              <span>📄</span>
+              Download Updated Confirmation PDF
+            </button>
+
+            <button
+              onClick={() => setStep("edit")}
+              className="w-full bg-white hover:bg-gray-100 text-[#630620] px-6 py-3 rounded-2xl font-semibold transition-colors"
+            >
+              Make More Changes
+            </button>
+
+            <Link
+              href="/"
+              className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors"
+            >
+              Return to Home
+            </Link>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-white/30">
+            <p className="text-sm text-white/80 text-center">
+              Need help? Contact us at{" "}
+              <a
+                href={`mailto:ghaliwali@gmail.com?subject=${encodeURIComponent('Help with Reservation #' + updatedReservation?.id)}`}
+                className="text-white hover:text-gray-200 font-medium underline hover:no-underline"
+              >
+                ghaliwali@gmail.com
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -657,130 +636,131 @@ export default function EditReservationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <button
-          onClick={() => setStep("search")}
-          className="inline-flex items-center gap-2 text-rose-400 hover:text-rose-300 mb-8 transition-colors group"
-        >
-          <span className="group-hover:-translate-x-1 transition-transform">←</span>
-          Back to Search
-        </button>
+    <div className="min-h-screen bg-white text-black p-4 md:p-8 relative">
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(/wood.svg)',
+          backgroundSize: '200%'
+        }}
+      />
+      
+      {/* Cancel Confirmation Modal */}
+      {showCancelModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white border border-gray-300 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-black mb-2">Cancel Reservation?</h3>
+              <p className="text-gray-600">
+                Are you sure you want to cancel this reservation? This action cannot be undone.
+              </p>
+            </div>
 
-        {/* Cancel Confirmation Modal */}
-        {showCancelModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 border border-gray-700 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-red-600/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                  </svg>
+            <div className="bg-gray-100 rounded-2xl p-4 mb-6">
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Reservation ID:</span>
+                  <span className="font-bold">{reservation?.id}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Cancel Reservation?</h3>
-                <p className="text-gray-400">
-                  Are you sure you want to cancel this reservation? This action cannot be undone.
-                </p>
-              </div>
-
-              <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-4 mb-6">
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Reservation ID:</span>
-                    <span className="text-white font-semibold">{reservation?.id}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Date:</span>
-                    <span className="text-white font-semibold">{formatDate(reservation?.date || '')}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Time:</span>
-                    <span className="text-white font-semibold">{formatTime(reservation?.time_from || '')}</span>
-                  </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Date:</span>
+                  <span className="font-bold">{formatDate(reservation?.date || '')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Time:</span>
+                  <span className="font-bold">{formatTime(reservation?.time_from || '')}</span>
                 </div>
               </div>
+            </div>
 
-              {error && (
-                <div className="mb-4 p-3 bg-red-900/30 border border-red-700/50 rounded-lg">
-                  <p className="text-red-300 text-sm">{error}</p>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowCancelModal(false)}
-                  disabled={cancelling}
-                  className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-xl transition-all disabled:opacity-50"
-                >
-                  Keep Reservation
-                </button>
-                <button
-                  onClick={handleCancelReservation}
-                  disabled={cancelling}
-                  className="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                >
-                  {cancelling ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Cancelling...
-                    </>
-                  ) : (
-                    'Yes, Cancel It'
-                  )}
-                </button>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl">
+                <p className="text-red-500 text-sm">{error}</p>
               </div>
+            )}
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCancelModal(false)}
+                disabled={cancelling}
+                className="flex-1 px-4 py-3 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-2xl transition-all disabled:opacity-50"
+              >
+                Keep Reservation
+              </button>
+              <button
+                onClick={handleCancelReservation}
+                disabled={cancelling}
+                className="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {cancelling ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Cancelling...
+                  </>
+                ) : (
+                  'Yes, Cancel'
+                )}
+              </button>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 md:p-8 shadow-2xl">
+      <div className="max-w-4xl mx-auto relative z-10">
+        <button
+          onClick={() => setStep("search")}
+          className="inline-flex items-center text-[#630620] hover:text-[#F87070] mb-6 font-semibold"
+        >
+          ← Back to Search
+        </button>
+
+        <div className="bg-[#D17272]/20 rounded-4xl p-6 md:p-8 border-5 border-[#630620]/70">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-rose-400 to-red-500 bg-clip-text text-transparent">Edit Reservation</h1>
-              <p className="text-gray-400 mt-1">Update your reservation details</p>
+              <h1 className="text-3xl font-black mb-1">
+                Edit Reservation
+              </h1>
+              <p className="text-gray-600">Update your reservation details</p>
             </div>
-            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-900/50 rounded-xl">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-gray-300">Reservation #{reservation?.id}</span>
+            <div className="px-4 py-2 bg-white/50 rounded-2xl">
+              <span className="text-sm font-bold text-[#630620]">Reservation #{reservation?.id}</span>
             </div>
           </div>
 
           {reservation && (
-            <div className="mb-8 p-6 bg-gradient-to-r from-gray-900 to-black border border-gray-700 rounded-xl">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-gray-900/50 rounded-lg">
-                  <p className="text-sm text-gray-400 mb-1">Date</p>
-                  <p className="text-lg font-semibold text-white">{formatDate(reservation.date)}</p>
-                </div>
-                <div className="p-4 bg-gray-900/50 rounded-lg">
-                  <p className="text-sm text-gray-400 mb-1">Time</p>
-                  <p className="text-lg font-semibold text-white">{formatTime(reservation.time_from)} - {formatTime(reservation.time_to)}</p>
-                </div>
-                <div className="p-4 bg-gray-900/50 rounded-lg">
-                  <p className="text-sm text-gray-400 mb-1">Table</p>
-                  <p className="text-lg font-semibold text-white">Table #{reservation.seat_id}</p>
-                </div>
+            <div className="mb-8 p-5 bg-[#CF8989] rounded-3xl text-center max-w-md mx-auto">
+              <h2 className="font-black text-xl mb-3">
+                Reservation Details
+              </h2>
+
+              <div className="space-y-1 text-sm font-bold">
+                <p>
+                  <span className="font-thin">Date:</span>{" "}
+                  {formatDate(reservation.date)}
+                </p>
+                <p>
+                  <span className="font-thin">Time:</span>{" "}
+                  {formatTime(reservation.time_from)} – {formatTime(reservation.time_to)}
+                </p>
+                <p>
+                  <span className="font-thin">Table:</span> #{reservation.seat_id}
+                </p>
               </div>
             </div>
           )}
 
           {error && (
-            <div className="mb-6 p-4 bg-red-900/30 border border-red-700/50 rounded-xl">
-              <div className="flex items-center gap-2 text-red-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-[#CF8989] rounded-xl text-sm">
+              <div className="flex items-center gap-2">
                 <span className="font-medium">{error}</span>
               </div>
             </div>
           )}
 
           {success && (
-            <div className="mb-6 p-4 bg-green-900/30 border border-green-700/50 rounded-xl">
-              <div className="flex items-center gap-2 text-green-300">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl text-sm">
+              <div className="flex items-center gap-2">
+                <span>✅</span>
                 <span className="font-medium">{success}</span>
               </div>
             </div>
@@ -789,61 +769,60 @@ export default function EditReservationPage() {
           <form onSubmit={handleUpdate} className="space-y-8">
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-rose-600/20 rounded-xl flex items-center justify-center">
-                  <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h2 className="text-xl font-bold text-white">Personal Information</h2>
+                <h2 className="text-xl font-black">
+                  Personal Information
+                </h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">Full Name *</label>
+                  <label className="block text-sm font-semibold mb-2">Full Name *</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">Email Address *</label>
+                  <label className="block text-sm font-semibold mb-2">Email Address *</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">Phone Number *</label>
+                  <label className="block text-sm font-semibold mb-2">Phone Number *</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2 text-gray-300">New Passcode (optional)</label>
+                  <label className="block text-sm font-semibold mb-2">New Passcode (optional)</label>
                   <input
                     type="text"
                     value={newPasscode}
                     onChange={handleNewPasscodeChange}
-                    className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all text-center text-xl tracking-widest font-bold"
+                    className="w-full px-4 py-3 bg-[#CF8989] rounded-full text-center text-xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
                     placeholder="Leave empty to keep current"
                     maxLength={4}
                     inputMode="numeric"
                     pattern="[0-9]{4}"
                   />
-                  <p className="text-xs text-gray-500 mt-2">Change your 4-digit reservation passcode</p>
+                  <p className="text-xs text-gray-500 mt-2 ml-3 leading-tight">
+                    Change your 4-digit reservation passcode
+                  </p>
                 </div>
               </div>
             </div>
@@ -851,25 +830,21 @@ export default function EditReservationPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-rose-600/20 rounded-xl flex items-center justify-center">
-                    <svg className="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
-                    </svg>
-                  </div>
-                  <h2 className="text-xl font-bold text-white">Pre-order Menu Items</h2>
+                  <h2 className="text-xl font-black">
+                    Pre-order Menu Items
+                  </h2>
                 </div>
                 {getTotalItems() > 0 && (
-                  <span className="px-3 py-1 bg-rose-600 text-white text-sm font-semibold rounded-full">
+                  <span className="px-3 py-1 bg-[#CF8989] text-white text-sm font-bold rounded-full">
                     {getTotalItems()} item{getTotalItems() !== 1 ? 's' : ''}
                   </span>
                 )}
               </div>
-              
 
               {loadingMenu ? (
                 <div className="text-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-500 mx-auto"></div>
-                  <p className="text-gray-400 mt-4 text-sm">Loading menu...</p>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#CF8989] mx-auto"></div>
+                  <p className="text-gray-500 mt-4 text-sm">Loading menu...</p>
                 </div>
               ) : menuData ? (
                 <div className="space-y-6">
@@ -879,10 +854,10 @@ export default function EditReservationPage() {
                         key={category}
                         type="button"
                         onClick={() => setSelectedCategory(selectedCategory === category ? null : category)}
-                        className={`px-4 py-2 rounded-lg font-medium transition-all transform hover:scale-105 ${
+                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                           selectedCategory === category
-                            ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg'
-                            : 'bg-gray-900 text-gray-300 hover:bg-gray-800'
+                            ? "bg-[#CF8989] text-white"
+                            : "bg-rose-100 text-[#CF8989] hover:bg-rose-200"
                         }`}
                       >
                         {formatCategoryName(category)}
@@ -891,27 +866,27 @@ export default function EditReservationPage() {
                   </div>
 
                   {selectedCategory && menuData.grouped[selectedCategory] && (
-                    <div className="bg-gray-900/50 border border-gray-700 rounded-2xl p-6">
-                      <h3 className="font-bold text-lg mb-4 text-white">{formatCategoryName(selectedCategory)}</h3>
+                    <div className="bg-[#CF8989]/20 rounded-3xl p-4">
+                      <h3 className="font-bold text-lg mb-4">{formatCategoryName(selectedCategory)}</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {menuData.grouped[selectedCategory].map((item) => {
                           const quantity = getItemQuantity(item.id);
                           return (
                             <div
                               key={item.id}
-                              className={`p-4 rounded-xl border transition-all ${
+                              className={`p-4 rounded-2xl border transition-all ${
                                 quantity > 0
-                                  ? 'bg-gradient-to-r from-gray-900 to-black border-rose-500/50'
-                                  : 'bg-gray-900/30 border-gray-700 hover:border-gray-600'
+                                  ? 'bg-white border-[#CF8989]'
+                                  : 'bg-white/50 border-rose-200 hover:border-rose-300'
                               }`}
                             >
                               <div className="flex justify-between items-start gap-4">
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between mb-1">
-                                    <h4 className="font-bold text-white">{item.name}</h4>
-                                    <span className="text-rose-400 font-bold">${item.price.toFixed(2)}</span>
+                                    <h4 className="font-bold">{item.name}</h4>
+                                    <span className="text-[#CF8989] font-bold">${item.price.toFixed(2)}</span>
                                   </div>
-                                  <p className="text-sm text-gray-400 mb-3">{item.description}</p>
+                                  <p className="text-sm text-gray-500 mb-3">{item.description}</p>
                                 </div>
                               </div>
                               
@@ -921,24 +896,24 @@ export default function EditReservationPage() {
                                     type="button"
                                     onClick={() => decrementItem(item.id)}
                                     disabled={quantity === 0}
-                                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold transition-all ${
+                                    className={`w-8 h-8 rounded-full font-bold transition-all ${
                                       quantity === 0
-                                        ? 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                                        : 'bg-gray-800 hover:bg-gray-700 text-white'
+                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                        : 'bg-rose-100 text-[#CF8989] hover:bg-rose-200'
                                     }`}
                                   >−</button>
                                   
-                                  <span className="w-8 text-center font-bold text-white text-lg">{quantity}</span>
+                                  <span className="w-8 text-center font-bold text-lg">{quantity}</span>
                                   
                                   <button
                                     type="button"
                                     onClick={() => incrementItem(item.id)}
-                                    className="w-8 h-8 rounded-lg bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 flex items-center justify-center text-white font-bold transition-all transform hover:scale-105"
+                                    className="w-8 h-8 rounded-full bg-[#CF8989] hover:bg-[#F87070] flex items-center justify-center text-white font-bold transition-all"
                                   >+</button>
                                 </div>
                                 
                                 {quantity > 0 && (
-                                  <span className="text-rose-400 font-bold">${(item.price * quantity).toFixed(2)}</span>
+                                  <span className="text-[#CF8989] font-bold">${(item.price * quantity).toFixed(2)}</span>
                                 )}
                               </div>
                             </div>
@@ -949,29 +924,29 @@ export default function EditReservationPage() {
                   )}
 
                   {getTotalItems() > 0 && (
-                    <div className="bg-gradient-to-r from-gray-900 to-black border border-gray-700 rounded-2xl p-6">
-                      <h3 className="font-bold text-lg mb-4 text-white">Order Summary</h3>
-                      <div className="space-y-3">
+                    <div className="bg-white rounded-3xl p-6 border border-rose-200">
+                      <h3 className="font-bold text-lg mb-4">Order Summary</h3>
+                      <div className="space-y-4">
                         {Object.entries(cart).map(([itemId, quantity]) => {
                           const item = menuData.items.find(i => i.id === Number(itemId));
                           return item ? (
-                            <div key={itemId} className="flex justify-between items-center py-2">
+                            <div key={itemId} className="flex justify-between items-center">
                               <div>
-                                <span className="text-gray-300 font-medium">{quantity}x {item.name}</span>
+                                <span className="font-medium">{quantity}x {item.name}</span>
                                 <p className="text-sm text-gray-500">${item.price.toFixed(2)} each</p>
                               </div>
-                              <span className="text-rose-400 font-bold">${(item.price * quantity).toFixed(2)}</span>
+                              <span className="text-[#CF8989] font-bold">${(item.price * quantity).toFixed(2)}</span>
                             </div>
                           ) : null;
                         })}
                         
-                        <div className="pt-4 mt-4 border-t border-gray-700">
+                        <div className="pt-4 mt-4 border-t border-gray-300">
                           <div className="flex justify-between items-center">
                             <div>
-                              <span className="text-white font-bold text-lg">Total</span>
+                              <span className="font-bold text-lg">Total</span>
                               <p className="text-sm text-gray-500">{getTotalItems()} item{getTotalItems() !== 1 ? 's' : ''}</p>
                             </div>
-                            <span className="text-2xl font-bold bg-gradient-to-r from-rose-400 to-red-500 bg-clip-text text-transparent">${calculateTotal().toFixed(2)}</span>
+                            <span className="text-2xl font-black text-[#CF8989]">${calculateTotal().toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
@@ -980,52 +955,24 @@ export default function EditReservationPage() {
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <svg className="w-16 h-16 text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="text-gray-400">Menu temporarily unavailable</p>
+                  <span className="text-gray-400 text-4xl">🍽️</span>
+                  <p className="text-gray-500 mt-4">Menu temporarily unavailable</p>
                 </div>
               )}
             </div>
 
-            {/* <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-[#CF8989]">
               <button
                 type="button"
                 onClick={() => setStep("search")}
-                className="flex-1 px-6 py-4 bg-gray-900 hover:bg-gray-800 text-gray-300 font-semibold rounded-xl transition-all transform hover:scale-[1.02]"
-              >Cancel</button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] disabled:hover:scale-100 shadow-lg"
+                className="flex-1 px-6 py-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-2xl transition-all"
               >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Saving Changes...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Update Reservation</span>
-                  </div>
-                )}
+                Cancel
               </button>
-            </div> */}
-          {/* </form> */}
-
-          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
-              <button
-                type="button"
-                onClick={() => setStep("search")}
-                className="flex-1 px-6 py-4 bg-gray-900 hover:bg-gray-800 text-gray-300 font-semibold rounded-xl transition-all transform hover:scale-[1.02]"
-              >Cancel</button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-[1.02] disabled:hover:scale-100 shadow-lg"
+                className="flex-1 bg-[#CF8989] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-4 px-6 rounded-2xl transition-all shadow-lg"
               >
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
@@ -1034,9 +981,7 @@ export default function EditReservationPage() {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <span>✓</span>
                     <span>Update Reservation</span>
                   </div>
                 )}
@@ -1044,33 +989,26 @@ export default function EditReservationPage() {
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-700">
+          <div className="mt-8 pt-6 border-t border-[#CF8989]">
             <button
               type="button"
               onClick={() => setShowCancelModal(true)}
-              className="w-full px-6 py-3 bg-red-900/20 hover:bg-red-900/30 border border-red-700/50 hover:border-red-600 text-red-400 hover:text-red-300 font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+              className="w-full px-6 py-3 bg-white hover:bg-gray-100 border border-red-300 hover:border-red-400 text-red-500 hover:text-red-600 font-semibold rounded-2xl transition-all flex items-center justify-center gap-2"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <span>✕</span>
               Cancel This Reservation
             </button>
-            {/* <p className="text-sm text-gray-500 text-center mt-4">
-              Need help? reach us at{" "}
-              <a
-                href={`mailto:ghaliwali@gmail.com?subject=${encodeURIComponent('Help with Reservation #' + id)}`}
-                className="text-rose-400 hover:text-rose-300 font-medium underline hover:no-underline"
-              >ghaliwali@gmail.com</a>
-            </p> */}
           </div>
 
-          <div className="mt-8 pt-6 border-t border-gray-700">
+          <div className="mt-8 pt-6 border-t border-[#CF8989]">
             <p className="text-sm text-gray-500 text-center">
               Need help? reach us at{" "}
               <a
                 href={`mailto:ghaliwali@gmail.com?subject=${encodeURIComponent('Help with Reservation #' + id)}`}
-                className="text-rose-400 hover:text-rose-300 font-medium underline hover:no-underline"
-              >ghaliwali@gmail.com</a>
+                className="text-[#CF8989] hover:text-[#F87070] font-medium underline hover:no-underline"
+              >
+                ghaliwali@gmail.com
+              </a>
             </p>
           </div>
         </div>

@@ -187,39 +187,39 @@ export default function FloatingPanel() {
     <>
       {/* Arrow button to toggle visibility - Always visible on the right */}
       <button
-  onClick={toggleVisibility}
-  className={`fixed top-1/5 z-50 bg-black/30 backdrop-blur-sm border-2 border-white/10 rounded-2xl transition-all duration-300 hover:bg-black/50 flex items-center ${
-    isVisible ? 'right-[13rem] lg:right-[26rem]' : 'right-0'
-  }`}
-  aria-label={isVisible ? "Hide panel" : "Show panel"}
-  title={isVisible ? "Hide panel" : "Show panel"}
->
-  <div className="pl-3">
-    {/* Calendar icon for reservations */}
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="20" 
-      height="20" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-      className="text-white"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-      <line x1="16" y1="2" x2="16" y2="6"></line>
-      <line x1="8" y1="2" x2="8" y2="6"></line>
-      <line x1="3" y1="10" x2="21" y2="10"></line>
-    </svg>
-  </div>
-  <div className="p-2 pr-3">
-    <div className="w-5 h-5 text-white">
-      {isVisible ? <ChevronRight /> : <ChevronLeft />}
-    </div>
-  </div>
-</button>
+        onClick={toggleVisibility}
+        className={`fixed top-1/5 z-50 bg-black/30 backdrop-blur-sm border-2 border-white/10 rounded-2xl transition-all duration-300 hover:bg-black/50 flex items-center ${
+          isVisible ? 'right-[13rem]' : 'right-0'
+        }`}
+        aria-label={isVisible ? "Hide panel" : "Show panel"}
+        title={isVisible ? "Hide panel" : "Show panel"}
+      >
+        <div className="pl-3">
+          {/* Calendar icon for reservations */}
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="20" 
+            height="20" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className="text-white"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </div>
+        <div className="p-2 pr-3">
+          <div className="w-5 h-5 text-white">
+            {isVisible ? <ChevronRight /> : <ChevronLeft />}
+          </div>
+        </div>
+      </button>
 
       {/* FloatingPanel container with slide animation */}
       <div

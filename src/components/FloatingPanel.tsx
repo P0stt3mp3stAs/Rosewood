@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { Map, Calendar } from "lucide-react";
 
 export default function FloatingPanel() {
   const [date, setDate] = useState("");
@@ -9,9 +8,12 @@ export default function FloatingPanel() {
   const [toTime, setToTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'available' | 'reserved'>('idle');
+  const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'available' | 'partially-reserved' | 'fully-reserved'>('idle');
   const [reservedCount, setReservedCount] = useState(0);
 
+  // Constants
+  const TOTAL_SEATS = 17;
+  
   // Get today's date in YYYY-MM-DD format for min date
   const today = new Date().toISOString().split('T')[0];
 
@@ -170,10 +172,13 @@ export default function FloatingPanel() {
       const reservedSeatsCount = data.reservedSeats.length;
       setReservedCount(reservedSeatsCount);
       
+      // Determine status based on reserved count
       if (reservedSeatsCount === 0) {
         setAvailabilityStatus('available');
+      } else if (reservedSeatsCount >= TOTAL_SEATS) {
+        setAvailabilityStatus('fully-reserved');
       } else {
-        setAvailabilityStatus('reserved');
+        setAvailabilityStatus('partially-reserved');
       }
 
       // Dispatch event to Three.js to update bell/reserved visibility
@@ -208,16 +213,16 @@ export default function FloatingPanel() {
             <span className="text-sm font-medium">Click the BELL to reserve</span>
           </>
         );
-      case 'reserved':
+      case 'partially-reserved':
         return (
           <>
             {reservedCount} Seat{reservedCount !== 1 ? 's' : ''} Reserved
             <br />
-            <span className="text-sm font-medium">Check MiniMap</span>
-            <br />
             <span className="text-sm font-medium">Click the BELL to reserve</span>
           </>
         );
+      case 'fully-reserved':
+        return 'All seats are reserved. Try another time or date.';
       default:
         return 'Check Availability';
     }
@@ -232,7 +237,9 @@ export default function FloatingPanel() {
         return `${baseClasses} bg-white text-black`;
       case 'available':
         return `${baseClasses} bg-green-500 text-white`;
-      case 'reserved':
+      case 'partially-reserved':
+        return `${baseClasses} bg-green-500 text-white`;
+      case 'fully-reserved':
         return `${baseClasses} bg-red-500 text-white`;
       default:
         return `${baseClasses} bg-white text-black`;
@@ -358,7 +365,7 @@ export default function FloatingPanel() {
 
           <button
             onClick={checkAvailability}
-            disabled={isLoading}
+            disabled={isLoading || availabilityStatus === 'fully-reserved'}
             className={getButtonClasses()}
           >
             {getButtonText()}

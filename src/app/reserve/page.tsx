@@ -305,7 +305,6 @@ function ReservePageContent() {
   
   const generateAndSendEmail = useCallback(async () => {
     if (!reservationData || !menuData) {
-      alert('Cannot send email: Missing reservation or menu data');
       return;
     }
     
@@ -431,12 +430,10 @@ function ReservePageContent() {
       const emailData = await emailResponse.json();
       
       if (!emailResponse.ok) {
-        alert(`Email failed: ${emailData.error || 'Unknown error'}`);
       } else {
       }
       
     } catch (error) {
-      alert(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }, [reservationData, menuData]);
   

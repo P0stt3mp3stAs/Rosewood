@@ -67,6 +67,18 @@ export async function GET(
       );
     }
 
+    // ✅ NEW CHECK: Verify reservation is active
+    console.log("Checking is_active status:", data.is_active);
+    if (data.is_active === false) {
+      return NextResponse.json(
+        { 
+          error: "Reservation cancelled",
+          message: "This reservation was canceled and can no longer be modified"
+        },
+        { status: 410 } // 410 Gone - resource is no longer available
+      );
+    }
+
     console.log("✅ Success! Returning reservation");
     return NextResponse.json({
       reservation: data
@@ -81,6 +93,7 @@ export async function GET(
   }
 }
 
+// PATCH function should also check is_active
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -113,9 +126,10 @@ export async function PATCH(
 
     console.log("📡 Verifying reservation ID:", reservationId);
 
+    // ✅ UPDATED: Fetch both passcode and is_active
     const { data: existing, error: fetchError } = await supabase
       .from("reservations")
-      .select("passcode")
+      .select("passcode, is_active")
       .eq("id", reservationId)
       .single();
 
@@ -133,6 +147,17 @@ export async function PATCH(
       return NextResponse.json(
         { error: "Wrong passcode" },
         { status: 401 }
+      );
+    }
+
+    // ✅ NEW CHECK: Verify reservation is active before allowing updates
+    if (existing.is_active === false) {
+      return NextResponse.json(
+        { 
+          error: "Reservation cancelled",
+          message: "This reservation was canceled and can no longer be modified"
+        },
+        { status: 410 }
       );
     }
 

@@ -281,7 +281,6 @@ const initRestorant3D = (options: InitOptions = {}) => {
       
       if (seatId === undefined) {
         console.error('Bell object does not have seatId in userData:', bellObject);
-        alert('Error: This bell is not properly configured. Please try another table.');
         return;
       }
       
@@ -293,14 +292,12 @@ const initRestorant3D = (options: InitOptions = {}) => {
       
       if (date && timeFrom && timeTo) {
         if (timeFrom === "00:00" && timeTo === "00:00") {
-          alert('Please select valid time slots (not both 00:00)!');
           return;
         }
         
         const seatIdStr = seatId.toString();
         if (!seatIdStr && seatIdStr !== '0') {
           console.error('Cannot convert seatId to string:', seatId);
-          alert('Error: Invalid seat ID. Please try another table.');
           return;
         }
         
@@ -315,7 +312,6 @@ const initRestorant3D = (options: InitOptions = {}) => {
         return;
       } else {
         console.warn('Date/time values are missing or incomplete');
-        alert('Please select date and time first using the form on the page!');
       }
       
       const bellEvent = new CustomEvent<CustomEventDetail>('bell-clicked', {

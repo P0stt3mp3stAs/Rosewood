@@ -143,14 +143,12 @@ export default function FloatingPanel() {
 
   const checkAvailability = async () => {
     if (!date || !fromTime || !toTime) {
-      alert('Please select date and time range first!');
       return;
     }
 
     // Simple validation: just check that TO time is allowed based on FROM time
     // The getToHours() function already handles what's valid, so if both are set, we're good
     if (fromTime === toTime) {
-      alert('End time must be different from start time!');
       return;
     }
 
@@ -189,7 +187,6 @@ export default function FloatingPanel() {
 
     } catch (err) {
       console.error("Failed to fetch reservations", err);
-      alert('Failed to check availability. Please try again.');
       setAvailabilityStatus('idle');
     } finally {
       setIsLoading(false);

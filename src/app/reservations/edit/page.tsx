@@ -89,29 +89,50 @@ export default function EditReservationPage() {
   };
 
   const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  setLoading(true);
 
-    try {
-      const res = await fetch(`/api/edit-reservation/${id}?passcode=${passcode}`);
-      const data = await res.json();
+  try {
+    const res = await fetch(`/api/edit-reservation/${id}?passcode=${passcode}`);
+    const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Failed to find reservation");
-
-      setReservation(data.reservation);
-      setName(data.reservation.name);
-      setEmail(data.reservation.email);
-      setPhone(data.reservation.phone);
-      setNewPasscode(data.reservation.passcode);
-      setStep("edit");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error searching");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      // ✅ NEW: Check if reservation is cancelled
+      if (res.status === 410) {
+        // Show cancelled reservation page
+        setReservation({
+          id: data.reservation?.id || id,
+          seat_id: data.reservation?.seat_id || "",
+          date: data.reservation?.date || "",
+          time_from: data.reservation?.time_from || "",
+          time_to: data.reservation?.time_to || "",
+          name: data.reservation?.name || "",
+          email: data.reservation?.email || "",
+          phone: data.reservation?.phone || "",
+          passcode: data.reservation?.passcode || "",
+          is_active: false,
+          menu_items: data.reservation?.menu_items || []
+        });
+        setStep("cancelled");
+        return;
+      }
+      throw new Error(data.error || data.message || "Failed to find reservation");
     }
-  };
+
+    setReservation(data.reservation);
+    setName(data.reservation.name);
+    setEmail(data.reservation.email);
+    setPhone(data.reservation.phone);
+    setNewPasscode(data.reservation.passcode);
+    setStep("edit");
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Error searching");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -406,7 +427,6 @@ export default function EditReservationPage() {
 
           <div className="bg-white/20 rounded-3xl p-4 mb-6">
             <div className="flex gap-3">
-              <span className="text-[#D64E4E] text-xl">ℹ️</span>
               <div>
                 <p className="text-white font-semibold">Cancellation Confirmed</p>
                 <p className="text-white/80 text-sm mt-1">
@@ -417,10 +437,14 @@ export default function EditReservationPage() {
           </div>
 
           <Link
-            href="/"
-            className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors"
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.reload();
+            }}
+            className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors cursor-pointer"
           >
-            Return to Home
+            Try Another
           </Link>
         </div>
       </div>

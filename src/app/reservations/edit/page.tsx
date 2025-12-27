@@ -545,9 +545,12 @@ export default function EditReservationPage() {
             <div className="mt-8 pt-6 border-t border-[#CF8989]">
               <p className="text-sm text-gray-500 text-center">
                 Don't have your passcode?{" "}
-                <button className="text-[#CF8989] hover:text-[#F87070] underline font-medium">
+                <a
+                  href="mailto:ghaliwali@gmail.com"
+                  className="text-[#CF8989] hover:text-[#F87070] underline font-medium"
+                >
                   Contact support
-                </button>
+                </a>
               </p>
             </div>
           </div>

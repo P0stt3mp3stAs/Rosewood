@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import initRestorant3D from "@/components/3D/restorant";
 import FloatingPanel from "@/components/FloatingPanel";
 import MiniMap from "@/components/MiniMap";
-import { Map, Calendar } from "lucide-react";
 
 export default function Home() {
   const [entered, setEntered] = useState(false);
@@ -99,25 +98,6 @@ export default function Home() {
                   </svg>
                   <span className="hidden sm:inline text-sm font-medium">Find Reservation</span>
                 </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Bottom Info Bar - Only when entered */}
-        {entered && (
-          <div className="absolute bottom-0 left-0 right-0 z-30">
-            <div className="backdrop-blur-xl bg-black/30 border-t border-white/10">
-              <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-center gap-4 sm:gap-8 text-sm text-gray-300">
-                <div className="flex items-center gap-2">
-                  <Map className="w-4 h-4 text-rose-400" />
-                  <span>check the MiniMap</span>
-                </div>
-                <div className="h-4 w-px bg-white/20 hidden sm:block" />
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-rose-400" />
-                  <span>Click the BELL to reserve</span>
-                </div>
               </div>
             </div>
           </div>

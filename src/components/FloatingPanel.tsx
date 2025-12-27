@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
+import { Map, Calendar } from "lucide-react";
 
 export default function FloatingPanel() {
   const [date, setDate] = useState("");
@@ -357,6 +358,29 @@ export default function FloatingPanel() {
           >
             {getButtonText()}
           </button>
+        </div>
+
+          <div className="absolute -bottom-00 left-0 right-0 z-30 flex flex-col mt-1 gap-1">
+          {/* First Element */}
+          <div className="backdrop-blur-xl bg-black/30 border-t border-white/10 rounded-3xl">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-center gap-4 sm:gap-8 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <Map className="w-4 h-4 text-rose-400 rounded-4xl" />
+                <span>check the MiniMap</span>
+              </div>
+              
+            </div>
+          </div>
+          
+          {/* Second Element - duplicate or modify as needed */}
+          <div className="backdrop-blur-xl bg-black/30 border-t border-white/10 rounded-3xl">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-center gap-4 sm:gap-8 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-rose-400" />
+                <span>Click the BELL to reserve</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

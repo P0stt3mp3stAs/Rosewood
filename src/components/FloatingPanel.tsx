@@ -7,7 +7,9 @@ export default function FloatingPanel() {
   const [fromTime, setFromTime] = useState("");
   const [toTime, setToTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isVisible, setIsVisible] = useState(false); // Hidden by default
+  const [isVisible, setIsVisible] = useState(false);
+  const [availabilityStatus, setAvailabilityStatus] = useState<'idle' | 'available' | 'reserved'>('idle');
+  const [reservedCount, setReservedCount] = useState(0);
 
   // Get today's date in YYYY-MM-DD format for min date
   const today = new Date().toISOString().split('T')[0];
@@ -57,6 +59,11 @@ export default function FloatingPanel() {
     
     return allHours;
   };
+
+  // Reset status when date or time changes
+  useEffect(() => {
+    setAvailabilityStatus('idle');
+  }, [date, fromTime, toTime]);
 
   // Initialize times when component mounts
   useEffect(() => {
@@ -147,6 +154,7 @@ export default function FloatingPanel() {
     }
 
     setIsLoading(true);
+    setAvailabilityStatus('idle');
 
     try {
       const res = await fetch(`/api/reservations?date=${date}&from=${fromTime}&to=${toTime}`);
@@ -159,6 +167,16 @@ export default function FloatingPanel() {
         throw new Error(data.error || 'Failed to fetch reservations');
       }
 
+      // Update state based on availability
+      const reservedSeatsCount = data.reservedSeats.length;
+      setReservedCount(reservedSeatsCount);
+      
+      if (reservedSeatsCount === 0) {
+        setAvailabilityStatus('available');
+      } else {
+        setAvailabilityStatus('reserved');
+      }
+
       // Dispatch event to Three.js to update bell/reserved visibility
       window.dispatchEvent(
         new CustomEvent("update-reservations", {
@@ -167,19 +185,51 @@ export default function FloatingPanel() {
       );
 
       console.log('Reserved seats:', data.reservedSeats);
-      
-      // Show feedback to user
-      if (data.reservedSeats.length === 0) {
-        alert('All seats are available for this time slot!');
-      } else {
-        alert(`${data.reservedSeats.length} seat(s) are reserved. Available seats are shown with bells.`);
-      }
 
     } catch (err) {
       console.error("Failed to fetch reservations", err);
       alert('Failed to check availability. Please try again.');
+      setAvailabilityStatus('idle');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Get button text based on status
+  const getButtonText = () => {
+    if (isLoading) return 'Checking...';
+    
+    switch (availabilityStatus) {
+      case 'idle':
+        return 'Check Availability';
+      case 'available':
+        return 'All Seats Available ✓';
+      case 'reserved':
+        return (
+          <>
+            {reservedCount} Seat{reservedCount !== 1 ? 's' : ''} Reserved
+            <br />
+            <span className="text-sm font-medium">Check MiniMap</span>
+          </>
+        );
+      default:
+        return 'Check Availability';
+    }
+  };
+
+  // Get button color classes based on status
+  const getButtonClasses = () => {
+    const baseClasses = "mt-4 rounded-2xl py-3 text-sm font-semibold tracking-wide hover:scale-[1.03] active:scale-[0.97] transition disabled:opacity-50 disabled:cursor-not-allowed";
+    
+    switch (availabilityStatus) {
+      case 'idle':
+        return `${baseClasses} bg-white text-black`;
+      case 'available':
+        return `${baseClasses} bg-green-500 text-white`;
+      case 'reserved':
+        return `${baseClasses} bg-red-500 text-white`;
+      default:
+        return `${baseClasses} bg-white text-black`;
     }
   };
 
@@ -303,9 +353,9 @@ export default function FloatingPanel() {
           <button
             onClick={checkAvailability}
             disabled={isLoading}
-            className="mt-4 rounded-2xl bg-white text-black py-3 text-sm font-semibold tracking-wide hover:scale-[1.03] active:scale-[0.97] transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className={getButtonClasses()}
           >
-            {isLoading ? 'Checking...' : 'Check Availability'}
+            {getButtonText()}
           </button>
         </div>
       </div>

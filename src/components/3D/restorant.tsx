@@ -109,7 +109,7 @@ const initRestorant3D = (options: InitOptions = {}) => {
   dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
   loader.setDRACOLoader(dracoLoader);
 
-  loader.load("/restorant3D.gltf", (gltf) => {
+  loader.load("/restorant3D.glb", (gltf) => {
     scene.add(gltf.scene);
   });
 

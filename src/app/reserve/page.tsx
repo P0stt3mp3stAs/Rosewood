@@ -5,7 +5,16 @@
 import { useState, useEffect, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import jsPDF from 'jspdf';
+import { ReservationLayout } from '@/components/reservation/ReservationLayout';
+import { ReservationCard } from '@/components/reservation/ReservationCard';
+import { ReservationDetails } from '@/components/reservation/ReservationDetails';
+import { PasscodeInput } from '@/components/reservation/PasscodeInput';
+import { ContactForm } from '@/components/reservation/ContactForm';
+import { AlertMessage } from '@/components/reservation/AlertMessage';
+import { MenuSection } from '@/components/menu/MenuSection';
+import { SuccessScreen } from '@/components/reservation/SuccessScreen';
+import { downloadReservationPDF, getPDFBase64 } from '../../../utils/pdfGenerator';
+import type { MenuItem } from '@/components/menu/types';
 
 interface ReservationResponse {
   error?: string;
@@ -25,23 +34,7 @@ interface ReservationResponse {
   };
 }
 
-interface MenuItem {
-  id: number;
-  category: string;
-  name: string;
-  description: string;
-  price: number;
-}
-
-interface MenuResponse {
-  success: boolean;
-  items: MenuItem[];
-  grouped: Record<string, MenuItem[]>;
-  categories: string[];
-}
-
 function ReservePageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   
   const seatId = searchParams.get('seat_id');
@@ -58,22 +51,17 @@ function ReservePageContent() {
   const [success, setSuccess] = useState(false);
   const [reservationData, setReservationData] = useState<ReservationResponse['reservation'] | null>(null);
   const [emailSent, setEmailSent] = useState(false);
-  
-  const [menuData, setMenuData] = useState<MenuResponse | null>(null);
-  const [loadingMenu, setLoadingMenu] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<number, number>>({});
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   
   useEffect(() => {
     const fetchMenu = async () => {
       try {
         const response = await fetch('/api/menu');
-        const data = await response.json() as MenuResponse;
-        setMenuData(data);
+        const data = await response.json();
+        setMenuItems(data.items || []);
       } catch (err) {
         console.error('Failed to load menu:', err);
-      } finally {
-        setLoadingMenu(false);
       }
     };
     
@@ -81,7 +69,7 @@ function ReservePageContent() {
   }, []);
   
   useEffect(() => {
-    if (success && reservationData && menuData && !emailSent) {
+    if (success && reservationData && menuItems.length > 0 && !emailSent) {
       const sendEmail = async () => {
         try {
           await generateAndSendEmail();
@@ -93,7 +81,7 @@ function ReservePageContent() {
       
       sendEmail();
     }
-  }, [success, reservationData, menuData, emailSent]);
+  }, [success, reservationData, menuItems, emailSent]);
   
   if (!seatId || !date || !from || !to) {
     return (
@@ -129,313 +117,28 @@ function ReservePageContent() {
     });
   };
   
-  const getItemQuantity = (itemId: number): number => {
-    return cart[itemId] || 0;
-  };
-  
-  const formatCategoryName = (category: string) => {
-    return category
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-  
-  const handlePasscodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    if (value.length <= 4) {
-      setPasscode(value);
-    }
-  };
-  
-  const formatDate = (dateStr: string) => {
-    const dateObj = new Date(dateStr);
-    return dateObj.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-  
-  const formatTime = (timeStr: string) => {
-    const [hours, minutes] = timeStr.split(':');
-    const hour = parseInt(hours);
-    const period = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${period}`;
-  };
-  
-  const calculateTotal = () => {
-    if (!menuData) return 0;
-    return Object.entries(cart).reduce((sum, [itemId, quantity]) => {
-      const item = menuData.items.find(i => i.id === Number(itemId));
-      return sum + (item?.price || 0) * quantity;
-    }, 0);
-  };
-  
-  const getTotalItems = () => {
-    return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
-  };
-  
-  const generatePDF = useCallback(() => {
-    if (!reservationData || !menuData) return;
-    
-    const doc = new jsPDF();
-    
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Reservation Confirmation', 105, 20, { align: 'center' });
-    
-    doc.setDrawColor(220, 38, 38);
-    doc.setLineWidth(0.5);
-    doc.line(20, 25, 190, 25);
-    
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Reservation Details', 20, 35);
-    
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
-    let yPos = 45;
-    
-    const details = [
-      ['Reservation ID:', String(reservationData.id)],
-      ['Table Number:', `#${reservationData.seat_id}`],
-      ['Date:', formatDate(reservationData.date)],
-      ['Time:', `${formatTime(reservationData.time_from)} - ${formatTime(reservationData.time_to)}`],
-      ['Status:', reservationData.is_active ? 'Active' : 'Inactive']
-    ];
-    
-    details.forEach(([label, value]) => {
-      doc.setFont('helvetica', 'bold');
-      doc.text(String(label), 20, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.text(String(value), 70, yPos);
-      yPos += 7;
-    });
-    
-    yPos += 5;
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Customer Information', 20, yPos);
-    yPos += 10;
-    
-    doc.setFontSize(11);
-    const customerInfo = [
-      ['Name:', String(reservationData.name)],
-      ['Email:', String(reservationData.email)],
-      ['Phone:', String(reservationData.phone)]
-    ];
-    
-    customerInfo.forEach(([label, value]) => {
-      doc.setFont('helvetica', 'bold');
-      doc.text(String(label), 20, yPos);
-      doc.setFont('helvetica', 'normal');
-      doc.text(String(value), 70, yPos);
-      yPos += 7;
-    });
-    
-    yPos += 5;
-    doc.setFillColor(254, 226, 226);
-    doc.rect(18, yPos - 6, 174, 12, 'F');
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text('Reservation Passcode:', 20, yPos);
-    doc.setFontSize(16);
-    doc.setTextColor(220, 38, 38);
-    doc.text(String(reservationData.passcode), 80, yPos);
-    doc.setTextColor(0, 0, 0);
-    yPos += 15;
-    
-    if (reservationData.menu_items && reservationData.menu_items.length > 0) {
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Pre-Ordered Items', 20, yPos);
-      yPos += 10;
-      
-      doc.setFontSize(10);
-      
-      const itemCounts: Record<number, number> = {};
-      reservationData.menu_items.forEach(itemId => {
-        itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
-      });
-      
-      let subtotal = 0;
-      
-      Object.entries(itemCounts).forEach(([itemId, quantity]) => {
-        const item = menuData.items.find(i => i.id === Number(itemId));
-        if (item) {
-          const itemTotal = item.price * quantity;
-          subtotal += itemTotal;
-          
-          doc.setFont('helvetica', 'normal');
-          doc.text(`${quantity}x ${item.name}`, 25, yPos);
-          doc.text(`$${itemTotal.toFixed(2)}`, 170, yPos, { align: 'right' });
-          yPos += 6;
-        }
-      });
-      
-      yPos += 3;
-      doc.setDrawColor(200, 200, 200);
-      doc.line(20, yPos, 190, yPos);
-      yPos += 7;
-      
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text('Total:', 25, yPos);
-      doc.setTextColor(220, 38, 38);
-      doc.text(`$${subtotal.toFixed(2)}`, 170, yPos, { align: 'right' });
-      doc.setTextColor(0, 0, 0);
-    } else {
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'italic');
-      doc.text('No items pre-ordered', 20, yPos);
-    }
-    
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    const footerY = 280;
-    doc.text('Thank you for your reservation!', 105, footerY, { align: 'center' });
-    doc.text('Please arrive 10 minutes before your reservation time.', 105, footerY + 5, { align: 'center' });
-    doc.text('Cancellations must be made at least 2 hours in advance.', 105, footerY + 10, { align: 'center' });
-    
-    doc.save(`Reservation-${reservationData.id}.pdf`);
-  }, [reservationData, menuData]);
-  
   const generateAndSendEmail = useCallback(async () => {
-    if (!reservationData || !menuData) {
-      return;
-    }
+    if (!reservationData || menuItems.length === 0) return;
     
     try {
-      const doc = new jsPDF();
-      
-      doc.setFontSize(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Reservation Confirmation', 105, 20, { align: 'center' });
-      
-      doc.setDrawColor(220, 38, 38);
-      doc.setLineWidth(0.5);
-      doc.line(20, 25, 190, 25);
-      
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Reservation Details', 20, 35);
-      
-      doc.setFontSize(11);
-      doc.setFont('helvetica', 'normal');
-      let yPos = 45;
-      
-      const details = [
-        ['Reservation ID:', String(reservationData.id)],
-        ['Table Number:', `#${reservationData.seat_id}`],
-        ['Date:', formatDate(reservationData.date)],
-        ['Time:', `${formatTime(reservationData.time_from)} - ${formatTime(reservationData.time_to)}`],
-        ['Status:', reservationData.is_active ? 'Active' : 'Inactive']
-      ];
-      
-      details.forEach(([label, value]) => {
-        doc.setFont('helvetica', 'bold');
-        doc.text(String(label), 20, yPos);
-        doc.setFont('helvetica', 'normal');
-        doc.text(String(value), 70, yPos);
-        yPos += 7;
-      });
-      
-      yPos += 5;
-      doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Customer Information', 20, yPos);
-      yPos += 10;
-      
-      doc.setFontSize(11);
-      const customerInfo = [
-        ['Name:', String(reservationData.name)],
-        ['Email:', String(reservationData.email)],
-        ['Phone:', String(reservationData.phone)]
-      ];
-      
-      customerInfo.forEach(([label, value]) => {
-        doc.setFont('helvetica', 'bold');
-        doc.text(String(label), 20, yPos);
-        doc.setFont('helvetica', 'normal');
-        doc.text(String(value), 70, yPos);
-        yPos += 7;
-      });
-      
-      yPos += 5;
-      doc.setFillColor(254, 226, 226);
-      doc.rect(18, yPos - 6, 174, 12, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(12);
-      doc.text('Reservation Passcode:', 20, yPos);
-      doc.setFontSize(16);
-      doc.setTextColor(220, 38, 38);
-      doc.text(String(reservationData.passcode), 80, yPos);
-      doc.setTextColor(0, 0, 0);
-      yPos += 15;
-      
-      if (reservationData.menu_items && reservationData.menu_items.length > 0) {
-        doc.setFontSize(14);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Pre-Ordered Items', 20, yPos);
-        yPos += 10;
-        
-        doc.setFontSize(10);
-        
-        const itemCounts: Record<number, number> = {};
-        reservationData.menu_items.forEach(itemId => {
-          itemCounts[itemId] = (itemCounts[itemId] || 0) + 1;
-        });
-        
-        Object.entries(itemCounts).forEach(([itemId, quantity]) => {
-          const item = menuData.items.find(i => i.id === Number(itemId));
-          if (item) {
-            doc.setFont('helvetica', 'normal');
-            doc.text(`${quantity}x ${item.name}`, 25, yPos);
-            doc.text(`$${(item.price * quantity).toFixed(2)}`, 170, yPos, { align: 'right' });
-            yPos += 6;
-          }
-        });
-      } else {
-        doc.setFontSize(11);
-        doc.setFont('helvetica', 'italic');
-        doc.text('No items pre-ordered', 20, yPos);
-      }
-      
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(100, 100, 100);
-      const footerY = 280;
-      doc.text('Thank you for your reservation!', 105, footerY, { align: 'center' });
-      doc.text('Please arrive 10 minutes before your reservation time.', 105, footerY + 5, { align: 'center' });
-      doc.text('Cancellations must be made at least 2 hours in advance.', 105, footerY + 10, { align: 'center' });
-      
-      const pdfBase64 = doc.output('dataurlstring').split(',')[1];
+      const pdfBase64 = getPDFBase64(reservationData, menuItems);
       
       const emailPayload = {
         reservation: reservationData,
         pdfBase64,
       };
       
-      const emailResponse = await fetch('/api/reservations/send-confirmation', {
+      await fetch('/api/reservations/send-confirmation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(emailPayload),
       });
-      
-      const emailData = await emailResponse.json();
-      
-      if (!emailResponse.ok) {
-      } else {
-      }
-      
     } catch (error) {
+      console.error('Email send error:', error);
     }
-  }, [reservationData, menuData]);
+  }, [reservationData, menuItems]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -449,7 +152,7 @@ function ReservePageContent() {
     setIsSubmitting(true);
     
     try {
-      const menuItems = Object.entries(cart).flatMap(([itemId, quantity]) => 
+      const menuItemsArray = Object.entries(cart).flatMap(([itemId, quantity]) => 
         Array(quantity).fill(Number(itemId))
       );
       
@@ -467,7 +170,7 @@ function ReservePageContent() {
           email,
           phone,
           passcode,
-          menu_items: menuItems
+          menu_items: menuItemsArray
         }),
       });
       
@@ -493,314 +196,77 @@ function ReservePageContent() {
   
   if (success && reservationData) {
     return (
-      <div className="min-h-screen bg-white text-black p-4 md:p-8 relative flex items-center justify-center">
-        <div 
-          className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(/wood.svg)',
-            backgroundSize: '200%'
-          }}
-        />
-        <div className="max-w-md mx-auto bg-[#630620]/70 p-8 rounded-3xl text-center relative z-10">
-          <h1 className="text-2xl text-white font-bold mb-4"> <span className="text-[#D17272] text-5xl mb-4">✓</span> Reservation Confirmed!</h1>
-          <p className="mb-2 text-black">Your table has been successfully reserved.</p>
-          
-          <div className="my-6 p-4 bg-[#D17272] rounded-3xl">
-            <p className="text-sm mb-2">Your Reservation Passcode:</p>
-            <p className="text-3xl font-bold text-white tracking-widest">{reservationData.passcode}</p>
-            <p className="text-x mt-2">
-              Please save this passcode. You'll need it to manage your reservation.
-            </p>
-          </div>
-          
-          <p className="text-sm text-white mb-4">
-            📧 A PDF confirmation has been sent to your email.
-          </p>
-          
-          <button
-            onClick={generatePDF}
-            className="w-full bg-[#6AC354] hover:bg-[#62A052] text-white px-6 py-3 rounded-2xl mb-4 font-semibold transition-colors"
-          >
-            📄 Download Reservation PDF
-          </button>
-          
-          <button
-            onClick={generateAndSendEmail}
-            className="w-full bg-[#3961A3] hover:bg-[#244A89] text-white px-6 py-3 rounded-2xl mb-4 font-semibold transition-colors"
-          >
-            📧 Send PDF to Email Again
-          </button>
-          
-          <Link 
-            href="/" 
-            className="block w-full bg-[#D64E4E] hover:bg-[#D17272] text-white px-6 py-3 rounded-2xl font-semibold transition-colors"
-          >
-            Return to Restaurant
-          </Link>
-        </div>
-      </div>
+      <SuccessScreen
+        reservation={reservationData}
+        cart={cart}
+        menuItems={menuItems}
+        onDownloadPDF={() => downloadReservationPDF(reservationData, menuItems)}
+        onResendEmail={generateAndSendEmail}
+      />
     );
   }
   
   return (
-    <div className="min-h-screen bg-white text-black p-4 md:p-8 relative">
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(/wood.svg)',
-          backgroundSize: '200%'
-        }}
-      />
-      <div className="max-w-4xl mx-auto relative z-10">
-        <Link
-          href="/"
-          className="inline-flex items-center text-[#630620] hover:text-[#F87070] mb-6 font-semibold"
-        >
-          ← Back to Restaurant
-        </Link>
+    <ReservationLayout>
+      <ReservationCard>
+        <h1 className="text-2xl font-black mb-6">
+          Reserve Table #{seatId}
+        </h1>
 
-        <div className="bg-[#D17272]/20 rounded-4xl p-6 md:p-8 border-5 border-[#630620]/70">
-          <h1 className="text-2xl font-black mb-6">
-            Reserve Table #{seatId}
-          </h1>
+        <ReservationDetails
+          seatId={seatId}
+          date={date}
+          timeFrom={from}
+          timeTo={to}
+        />
 
-          {/* Reservation Details */}
-          <div className="mb-8 p-5 bg-[#CF8989] rounded-3xl text-center max-w-md mx-auto">
-            <h2 className="font-black text-xl mb-3">
-              Reservation Details
+        <form onSubmit={handleSubmit} className="space-y-4 pt-2 border-t border-[#CF8989]">
+          <ContactForm
+            name={name}
+            setName={setName}
+            email={email}
+            setEmail={setEmail}
+            phone={phone}
+            setPhone={setPhone}
+          />
+
+          <PasscodeInput
+            value={passcode}
+            onChange={setPasscode}
+            helpText="You'll need this passcode to manage your reservation"
+          />
+
+          <div className="pt-2 border-t border-[#CF8989]">
+            <h2 className="text-xl font-black mb-2">
+              Pre-order Menu (Optional)
             </h2>
+            <p className="text-sm text-gray-500 mb-6">
+              Select items now or order later at the table.
+            </p>
 
-            <div className="space-y-1 text-sm font-bold">
-              <p>
-                <span className="font-thin">Date:</span>{" "}
-                {formatDate(date)}
-              </p>
-              <p>
-                <span className="font-thin">Time:</span>{" "}
-                {formatTime(from)} – {formatTime(to)}
-              </p>
-              <p>
-                <span className="font-thin">Table:</span> #{seatId}
-              </p>
-            </div>
+            <MenuSection
+              cart={cart}
+              onIncrementItem={incrementItem}
+              onDecrementItem={decrementItem}
+            />
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4 pt-2 border-t border-[#CF8989]">
-            {/* User Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
-                  placeholder="Your name"
-                />
-              </div>
+          {error && <AlertMessage type="error" message={error} />}
 
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Email <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
-                  placeholder="email@example.com"
-                />
-              </div>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-[#CF8989] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
+          >
+            {isSubmitting ? "Processing…" : "Confirm Reservation"}
+          </button>
+        </form>
 
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Phone <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full font-bold focus:ring-2 focus:ring-rose-500 outline-none"
-                  placeholder="(000) 000-0000"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  4-Digit Passcode <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={passcode}
-                  onChange={handlePasscodeChange}
-                  inputMode="numeric"
-                  pattern="[0-9]{4}"
-                  maxLength={4}
-                  required
-                  className="w-full px-4 py-2 bg-[#CF8989] rounded-full text-center text-2xl tracking-widest font-black focus:ring-2 focus:ring-rose-500 outline-none"
-                  placeholder="••••"
-                />
-                <p className="text-[9px] text-gray-400 mt-1 ml-3 leading-tight">
-                  You'll need this passcode to manage your reservation
-                </p>
-              </div>
-            </div>
-
-            {/* Pre-order Section */}
-            <div className="pt-2 border-t border-[#CF8989]">
-              <h2 className="text-xl font-black mb-2">
-                Pre-order Menu (Optional)
-              </h2>
-              <p className="text-sm text-gray-500 mb-6">
-                Select items now or order later at the table.
-              </p>
-
-              {loadingMenu ? (
-                <div className="text-center py-10">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#CF8989] mx-auto" />
-                  <p className="text-gray-500 mt-3 text-sm">
-                    Loading menu…
-                  </p>
-                </div>
-              ) : menuData ? (
-                <div className="space-y-6">
-                  {/* Categories */}
-                  <div className="flex flex-wrap gap-2">
-                    {menuData.categories.map((category) => (
-                      <button
-                        key={category}
-                        type="button"
-                        onClick={() =>
-                          setSelectedCategory(
-                            selectedCategory === category
-                              ? null
-                              : category
-                          )
-                        }
-                        className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                          selectedCategory === category
-                            ? "bg-[#CF8989] text-white"
-                            : "bg-rose-100 text-[#CF8989] hover:bg-rose-200"
-                        }`}
-                      >
-                        {formatCategoryName(category)}
-                      </button>
-                    ))}
-                  </div>
-
-                  {selectedCategory &&
-                    menuData.grouped[selectedCategory] && (
-                      <div className="bg-[#CF8989]/20 rounded-3xl p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {menuData.grouped[selectedCategory].map((item) => {
-                          const quantity = getItemQuantity(item.id);
-                          return (
-                            <div
-                              key={item.id}
-                              className="bg-white rounded-2xl p-3 border border-rose-200 flex flex-col justify-between"
-                            >
-                              <div>
-                                <h4 className="font-semibold text-sm">{item.name}</h4>
-                                <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
-                                <p className="text-[#CF8989] font-bold text-sm mt-1">
-                                  ${item.price.toFixed(2)}
-                                </p>
-                              </div>
-
-                              <div className="flex items-center gap-2 mt-3">
-                                <button
-                                  type="button"
-                                  onClick={() => decrementItem(item.id)}
-                                  disabled={quantity === 0}
-                                  className="w-7 h-7 rounded-full bg-rose-100 text-[#CF8989] font-bold text-sm disabled:opacity-40"
-                                >
-                                  −
-                                </button>
-                                <span className="w-5 text-center font-bold text-sm">{quantity}</span>
-                                <button
-                                  type="button"
-                                  onClick={() => incrementItem(item.id)}
-                                  className="w-7 h-7 rounded-full bg-[#CF8989] text-white font-bold text-sm"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                  {/* Summary */}
-                  {getTotalItems() > 0 && (
-                    <div className="bg-white rounded-3xl p-5 border border-rose-200">
-                      <h3 className="font-black mb-3">
-                        Your Order ({getTotalItems()})
-                      </h3>
-
-                      {Object.entries(cart).map(([id, qty]) => {
-                        const item = menuData.items.find(
-                          (i) => i.id === Number(id)
-                        );
-                        return (
-                          item && (
-                            <div
-                              key={id}
-                              className="flex justify-between text-sm"
-                            >
-                              <span>
-                                {qty}× {item.name}
-                              </span>
-                              <span className="font-semibold text-[#CF8989]">
-                                ${(item.price * qty).toFixed(2)}
-                              </span>
-                            </div>
-                          )
-                        );
-                      })}
-
-                      <div className="pt-3 mt-3 border-t flex justify-between font-black">
-                        <span>Total</span>
-                        <span className="text-[#CF8989]">
-                          ${calculateTotal().toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-sm">
-                  Unable to load menu.
-                </p>
-              )}
-            </div>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-[#CF8989] p-4 rounded-xl text-sm">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-[#CF8989] hover:bg-[#F87070] disabled:opacity-60 text-white font-black py-3 rounded-full transition"
-            >
-              {isSubmitting ? "Processing…" : "Confirm Reservation"}
-            </button>
-          </form>
-
-          <p className="mt-6 text-[11px] text-gray-400 text-center">
-            Cancellations must be made at least 2 hours in advance.
-          </p>
-        </div>
-      </div>
-    </div>
+        <p className="mt-6 text-[11px] text-gray-400 text-center">
+          Cancellations must be made at least 2 hours in advance.
+        </p>
+      </ReservationCard>
+    </ReservationLayout>
   );
 }
 
